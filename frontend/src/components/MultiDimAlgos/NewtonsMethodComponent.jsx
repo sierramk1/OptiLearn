@@ -31,6 +31,8 @@ function NewtonsMethodComponent() {
   const [gradStr, setGradStr] = useState('[-2 + 2*x - 400*x*y + 400*x^3, 200*y - 200*x^2]');
   const [hessianStr, setHessianStr] = useState('[[2 - 400*y + 1200*x^2, -400*x], [-400*x, 200]]');
   const [initialGuessStr, setInitialGuessStr] = useState('0, 0');
+  const [tolerance, setTolerance] = useState(1e-6);
+  const [maxIterations, setMaxIterations] = useState(50);
   const [path, setPath] = useState([]);
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -229,7 +231,7 @@ function NewtonsMethodComponent() {
 
 
       try {
-        const result = newtonsMethod(func, grad, hessian, initialGuess, 1e-6, 50);
+        const result = newtonsMethod(func, grad, hessian, initialGuess, tolerance, maxIterations);
 
         if (!result?.path) {
           alert("Newton's method failed. Check your function, gradient, and Hessian.");
@@ -346,20 +348,28 @@ function NewtonsMethodComponent() {
         {/* Controls */}
         <Grid item xs={12} md={4}>
           <Typography variant="body2" sx={{ fontSize: "1em", lineHeight: 1.75, marginBottom: 1 }}>
-            Newton’s method leverages both first- and second-order derivatives — the gradient and the Hessian — to iteratively approximate the minimum of a function. Its quadratic convergence makes it fast, but the cost of computing and inverting the Hessian can be high for large problems.
+            Newton’s Method is a second-order optimization algorithm that uses both the gradient and the Hessian to locate a local minimum of a differentiable function. At each iteration, it updates the current point by solving a linear system involving the Hessian to determine the search direction. When the Hessian is well-behaved and the starting point is reasonable, the method converges very quickly.
+          </Typography>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ fontStyle: 'italic', marginBottom: 2 }}
+          >
+            Note: The choice of starting points or interval can affect which root or minimum is found, especially for functions with multiple solutions.
           </Typography>
           <TextField label="Number of Dimensions" type="number" value={numDimensionsInput} onChange={handleDimChange} fullWidth margin="normal" />
           <TextField label="Function f(x1, x2, ...)" value={funcStr} onChange={(e) => setFuncStr(e.target.value)} fullWidth margin="normal" placeholder="(1 - x)^2 + 100 * (y - x^2)^2" />
           <TextField label="Gradient g(x1, x2, ...)" value={gradStr} onChange={(e) => setGradStr(e.target.value)} fullWidth margin="normal" placeholder="[-2 + 2*x - 400*x*y + 400*x^3, 200*y - 200*x^2]" />
           <TextField label="Hessian H(x1, x2, ...)" value={hessianStr} onChange={(e) => setHessianStr(e.target.value)} fullWidth margin="normal" placeholder="[[2 - 400*y + 1200*x^2, -400*x], [-400*x, 200]]" />
-          <TextField label="Initial Guess" value={initialGuessStr} onChange={(e) => setInitialGuessStr(e.target.value)} fullWidth margin="normal" />
-          <Button 
-            onClick={handleOptimize} 
-            variant="contained" 
-            fullWidth 
-            sx={{ mt: 2, backgroundColor: '#72A8C8', '&:hover': { backgroundColor: '#5a8fa8' } }}
-          >
-            Optimize
+                    <TextField label="Initial Guess" value={initialGuessStr} onChange={(e) => setInitialGuessStr(e.target.value)} fullWidth margin="normal" />
+                    <TextField label="Tolerance" type="number" value={tolerance} onChange={(e) => setTolerance(Number(e.target.value))} fullWidth margin="normal" inputProps={{ step: "1e-7" }} />
+                    <TextField label="Max Iterations" type="number" value={maxIterations} onChange={(e) => setMaxIterations(Number(e.target.value))} fullWidth margin="normal" />
+                    <Button
+                      onClick={handleOptimize}
+                      variant="contained"
+                      fullWidth
+                      sx={{ mt: 2, backgroundColor: '#72A8C8', '&:hover': { backgroundColor: '#5a8fa8' } }}
+                    >            Optimize
           </Button>
           {numDimensions > 2 && (
             <Box sx={{ mt: 2 }}>
@@ -487,60 +497,31 @@ function NewtonsMethodComponent() {
                     >
                       {`# Pseudocode for Multi-dimensional Newton's Method
 
-**FUNCTION** NewtonsMethod(f, grad_f, hess_f, x0, tol, max_iter)
+FUNCTION NewtonsMethod(f, grad_f, hessian_f, x0, tol, max_iter)
 
-  // **INPUTS:**
-  // f: The objective function to minimize.
-  // grad_f: The gradient function of f.
-  // hess_f: The Hessian matrix function of f.
-  // x0: The initial starting point (vector).
-  // tol: The tolerance for convergence.
-  // max_iter: The maximum number of iterations.
+  // INPUTS:
+  // f: Function to minimize
+  // grad_f: Gradient of f
+  // hessian_f: Hessian of f
+  // x0: Initial point (vector)
+  // tol: Tolerance for convergence
+  // max_iter: Maximum iterations
 
-  // **INITIALIZATION:**
-  current_x = x0
-  path = [x0] // Store the path for visualization
-
-  // **ITERATION:**
   FOR iter FROM 1 TO max_iter DO
-    // Calculate the gradient vector at the current point
-    gradient_vector = grad_f(current_x)
 
-    // Calculate the Hessian matrix at the current point
-    hessian_matrix = hess_f(current_x)
-
-    // Solve for the Newton step 's' using the equation: Hessian * s = -Gradient
-    // This is equivalent to s = inverse(Hessian) * -Gradient
-    TRY
-      inverse_hessian = INVERT(hessian_matrix)
-      step_s = MULTIPLY(inverse_hessian, NEGATE(gradient_vector))
-    CATCH Error AS e
-      OUTPUT "Error: Matrix inversion failed. Hessian may be singular."
-      RETURN { convergence: false, path: path }
-    END TRY
-
-    // Calculate the next approximation
-    next_x = SUBTRACT(current_x, step_s)
-
-    // Add the next point to the path
-    path.push(next_x)
-
-    // Check for convergence (e.g., if the step size is small)
-    IF NORM(SUBTRACT(next_x, current_x)) < tol THEN
-      OUTPUT "Converged to a minimum."
-      RETURN { xmin: next_x, convergence: true, iter: iter, path: path }
+    grad = grad_f(x0)
+    IF norm(grad) < tol THEN
+      RETURN x0
     END IF
 
-    // Update for next iteration
-    current_x = next_x
+    // Update using Newton step
+    x0 = x0 - inverse(hessian_f(x0)) * grad
 
   END FOR
 
-  // If max_iter reached without convergence
-  OUTPUT "Newton's method did not converge after " + max_iter + " iterations."
-  RETURN { xmin: current_x, convergence: false, iter: max_iter, path: path }
-
-**END FUNCTION**`}
+  RETURN x0
+END FUNCTION
+`}
                     </pre>
                   </>
                 }

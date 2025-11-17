@@ -8,9 +8,9 @@ import { createInterpolatedFunction } from '../../js/utils.js';
 
 function SecantComponent({ optimizationType, data }) {
   // Input states
-  const [funcString, setFuncString] = useState("x^3 - x - 2");
-  const [x0Value, setX0Value] = useState("1.0");
-  const [x1Value, setX1Value] = useState("2.0");
+  const [funcString, setFuncString] = useState("x^3 - x - 1");
+  const [x0Value, setX0Value] = useState("1");
+  const [x1Value, setX1Value] = useState("2");
   const [tolerance, setTolerance] = useState("1e-6");
   const [maxIterations, setMaxIterations] = useState("100");
 
@@ -243,7 +243,15 @@ function SecantComponent({ optimizationType, data }) {
             variant="body2"
             sx={{ fontSize: "1em", lineHeight: 1.75, marginBottom: 1 }}
           >
-            The Secant method is a root-finding algorithm that uses a succession of roots of secant lines to better approximate a root of a function.
+            The Secant Method is a root-finding algorithm that begins with two initial points and constructs a line (secant) through their function values. The x-intercept of this line becomes the next approximation of the root. The process repeats using the most recent two points, allowing the method to converge without requiring derivatives.
+          </Typography>
+
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ fontStyle: 'italic', marginBottom: 2 }}
+          >
+            Note: The choice of starting points or interval can affect which root or minimum is found, especially for functions with multiple solutions.
           </Typography>
 
           <Grid container spacing={2} sx={{ width: "100%" }}>
@@ -382,64 +390,34 @@ function SecantComponent({ optimizationType, data }) {
                 <>
                   <h4>Secant Method Pseudocode</h4>
                   <pre
-                    style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}
+                    style={{ whiteSpace: "pre-wrap", wordBreak: "break-word", maxHeight: '500px', overflowY: 'auto' }}
                   >
                     {`# Pseudocode for the Secant Method
 
-This algorithm is a root-finding method that uses a succession of roots of secant lines to better approximate a root of a function. It is similar to Newton's method but avoids the need for an analytical derivative by approximating it with a finite difference.
+FUNCTION SecantMethod(f, x0, x1, tol, max_iter)
 
-**FUNCTION** Secant(f, x0, x1, tol, max_iter)
+  // INPUTS:
+  // f: Function for which we are finding a root
+  // x0, x1: Initial guesses
+  // tol: Desired tolerance
+  // max_iter: Maximum number of iterations
 
-  // **INPUTS:**
-  // f: The function for which we are finding a root.
-  // x0, x1: Two initial guesses for the root.
-  // tol: The desired tolerance for convergence.
-  // max_iter: The maximum number of iterations.
-
-  // **INITIALIZATION:**
-  current_x0 = x0
-  current_x1 = x1
-
-  // Check if initial guesses are already roots
-  IF abs(f(current_x0)) < tol THEN
-    RETURN current_x0
-  END IF
-  IF abs(f(current_x1)) < tol THEN
-    RETURN current_x1
-  END IF
-
-  // **ITERATION:**
   FOR iter FROM 1 TO max_iter DO
-    f_x0 = f(current_x0)
-    f_x1 = f(current_x1)
 
-    // Check for function values being too close (potential division by zero)
-    IF abs(f_x1 - f_x0) < tol THEN
-      OUTPUT "Error: Function values at the two points are too close."
-      RETURN null
+    IF abs(f(x1)) < tol THEN
+      RETURN x1
     END IF
 
-    // Calculate the next approximation using the Secant formula
-    next_x = current_x1 - (f_x1 * (current_x1 - current_x0)) / (f_x1 - f_x0)
-
-    // Yield current state for visualization (current_x0, current_x1, next_x)
-
-    // Check for convergence
-    IF abs(next_x - current_x1) < tol THEN
-      RETURN next_x
-    END IF
-
-    // Update for next iteration
-    current_x0 = current_x1
-    current_x1 = next_x
+    // Compute next approximation
+    x_temp = x1 - f(x1) * (x1 - x0) / (f(x1) - f(x0))
+    x0 = x1
+    x1 = x_temp
 
   END FOR
 
-  // If max_iter reached without convergence
-  OUTPUT "Secant method did not converge after " + max_iter + " iterations." 
-  RETURN null
-
-**END FUNCTION**`}
+  RETURN x1   // Return best guess after max_iter
+END FUNCTION
+`}
                   </pre>
                 </>
               }

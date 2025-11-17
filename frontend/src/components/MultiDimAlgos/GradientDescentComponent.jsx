@@ -334,7 +334,14 @@ function GradientDescentComponent() {
         {/* Controls */}
         <Grid item xs={12} md={4}>
           <Typography variant="body2" sx={{ fontSize: "1em", lineHeight: 1.75, marginBottom: 1 }}>
-            Gradient Descent is a first-order iterative optimization algorithm for finding the local minimum of a differentiable function. It takes steps proportional to the negative of the gradient of the function at the current point. The learning rate (step size) is crucial for convergence.
+            Gradient Descent is an iterative optimization algorithm that moves in the direction of the negative gradient to reduce the value of a differentiable function. At each step, it updates the current point by taking a step proportional to the gradient’s magnitude. The learning rate controls how large these steps are and plays a key role in ensuring convergence.
+          </Typography>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ fontStyle: 'italic', marginBottom: 2 }}
+          >
+            Note: The choice of starting points or interval can affect which root or minimum is found, especially for functions with multiple solutions.
           </Typography>
           <TextField label="Number of Dimensions" type="number" value={numDimensionsInput} onChange={handleDimChange} fullWidth margin="normal" />
           <TextField label="Function f(x1, x2, ...)" value={funcStr} onChange={(e) => setFuncStr(e.target.value)} fullWidth margin="normal" placeholder="(1 - x)^2 + 100 * (y - x^2)^2" />
@@ -478,53 +485,31 @@ function GradientDescentComponent() {
                     >
                       {`# Pseudocode for Multi-dimensional Gradient Descent
 
-**FUNCTION** GradientDescent(f, grad_f, x0, alpha, tol, max_iter)
+FUNCTION GradientDescent(f, grad_f, x0, learning_rate, tol, max_iter)
 
-  // **INPUTS:**
-  // f: The objective function to minimize.
-  // grad_f: The gradient function of f.
-  // x0: The initial starting point (vector).
-  // alpha: The learning rate (step size).
-  // tol: The tolerance for convergence.
-  // max_iter: The maximum number of iterations.
+  // INPUTS:
+  // f: Function to minimize
+  // grad_f: Gradient of f
+  // x0: Initial point (vector for multi-dimensional)
+  // learning_rate: Step size
+  // tol: Tolerance for convergence
+  // max_iter: Maximum number of iterations
 
-  // **INITIALIZATION:**
-  current_x = x0
-  path = [x0] // Store the path for visualization
-
-  // **ITERATION:**
   FOR iter FROM 1 TO max_iter DO
-    // Calculate the gradient vector at the current point
-    gradient_vector = grad_f(current_x)
 
-    // Check for convergence based on gradient norm
-    IF NORM(gradient_vector) < tol THEN
-      OUTPUT "Converged to a minimum (gradient norm below tolerance)."
-      RETURN { xmin: current_x, fval: f(current_x), iter: iter, path: path }
+    grad = grad_f(x0)
+    IF norm(grad) < tol THEN
+      RETURN x0
     END IF
 
-    // Calculate the next approximation
-    next_x = SUBTRACT(current_x, MULTIPLY(alpha, gradient_vector))
-
-    // Add the next point to the path
-    path.push(next_x)
-
-    // Check for convergence based on step size
-    IF NORM(SUBTRACT(next_x, current_x)) < tol THEN
-      OUTPUT "Converged to a minimum (step size below tolerance)."
-      RETURN { xmin: next_x, fval: f(next_x), iter: iter, path: path }
-    END IF
-
-    // Update for next iteration
-    current_x = next_x
+    // Move against the gradient
+    x0 = x0 - learning_rate * grad
 
   END FOR
 
-  // If max_iter reached without convergence
-  OUTPUT "Gradient Descent did not converge after " + max_iter + " iterations."
-  RETURN { xmin: current_x, fval: f(current_x), iter: max_iter, path: path }
-
-**END FUNCTION**`}
+  RETURN x0
+END FUNCTION
+`}
                     </pre>
                   </>
                 }

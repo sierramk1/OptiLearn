@@ -100,6 +100,25 @@ function AlgorithmsPage() {
             >
               Multi-Dimensional
             </Button>
+            <Button
+              component={Link}
+              to="/blog"
+              sx={{
+                color: '#666',
+                fontSize: '1.2em',
+                fontWeight: 'normal',
+                textDecoration: 'none',
+                textTransform: 'none',
+                minWidth: '180px',
+                padding: '0',
+                '&:hover': {
+                  backgroundColor: 'transparent',
+                  textDecoration: 'underline'
+                }
+              }}
+            >
+              Blog
+            </Button>
           </Box>
         </Toolbar>
       </AppBar>

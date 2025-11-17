@@ -8,8 +8,8 @@ import { createInterpolatedFunction } from '../../js/utils.js';
 
 function NewtonRaphsonComponent({ optimizationType, data }) {
   // Input states
-  const [funcString, setFuncString] = useState("x^3 - x - 2");
-  const [x0Value, setX0Value] = useState("1.0");
+  const [funcString, setFuncString] = useState("x^3 - x - 1");
+  const [x0Value, setX0Value] = useState("1");
   const [tolerance, setTolerance] = useState("1e-6");
   const [maxIterations, setMaxIterations] = useState("100");
 
@@ -241,7 +241,15 @@ function NewtonRaphsonComponent({ optimizationType, data }) {
             variant="body2"
             sx={{ fontSize: "1em", lineHeight: 1.75, marginBottom: 1 }}
           >
-            The Newton-Raphson method is an iterative root-finding algorithm that uses the tangent line to approximate the function.
+            The Newton–Raphson Method is a root-finding algorithm that starts from an initial guess and uses the function’s derivative to refine that estimate. At each step, it computes the tangent line at the current point and takes its x-intercept as the next approximation. This process repeats, often converging very quickly when the initial guess is close to the root.
+          </Typography>
+
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ fontStyle: 'italic', marginBottom: 2 }}
+          >
+            Note: The choice of starting points or interval can affect which root or minimum is found, especially for functions with multiple solutions.
           </Typography>
 
           <Grid container spacing={2} sx={{ width: "100%" }}>
@@ -368,60 +376,33 @@ function NewtonRaphsonComponent({ optimizationType, data }) {
                 <>
                   <h4>Newton-Raphson Method Pseudocode</h4>
                   <pre
-                    style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}
+                    style={{ whiteSpace: "pre-wrap", wordBreak: "break-word", maxHeight: '500px', overflowY: 'auto' }}
                   >
                     {`# Pseudocode for the Newton-Raphson Method
 
-This algorithm finds successively better approximations to the roots (or zeroes) of a real-valued function. It starts with an initial guess and uses the function's value and its derivative to find the next approximation.
+FUNCTION NewtonRaphson(f, f_prime, x0, tol, max_iter)
 
-**FUNCTION** NewtonRaphson(f, fp, x0, tol, max_iter)
+  // INPUTS:
+  // f: Function for which we are finding a root
+  // f_prime: Derivative of f
+  // x0: Initial guess
+  // tol: Desired tolerance
+  // max_iter: Maximum number of iterations
 
-  // **INPUTS:**
-  // f: The function for which we are finding a root.
-  // fp: The first derivative of the function f.
-  // x0: The initial guess for the root.
-  // tol: The desired tolerance for convergence.
-  // max_iter: The maximum number of iterations.
-
-  // **INITIALIZATION:**
-  current_x = x0
-
-  // Check if initial guess is already the root
-  IF abs(f(current_x)) < tol THEN
-    RETURN current_x
-  END IF
-
-  // **ITERATION:**
   FOR iter FROM 1 TO max_iter DO
-    f_x = f(current_x)
-    fp_x = fp(current_x)
 
-    // Check for derivative near zero (potential division by zero or flat region)
-    IF abs(fp_x) < tol THEN
-      OUTPUT "Error: Derivative is too close to zero."
-      RETURN null
+    IF abs(f(x0)) < tol THEN
+      RETURN x0
     END IF
 
-    // Calculate the next approximation using the Newton-Raphson formula
-    next_x = current_x - (f_x / fp_x)
-
-    // Yield current state for visualization (current_x, next_x)
-
-    // Check for convergence
-    IF abs(next_x - current_x) < tol THEN
-      RETURN next_x
-    END IF
-
-    // Update for next iteration
-    current_x = next_x
+    // Update using tangent line
+    x0 = x0 - f(x0) / f_prime(x0)
 
   END FOR
 
-  // If max_iter reached without convergence
-  OUTPUT "Newton-Raphson method did not converge after " + max_iter + " iterations." 
-  RETURN null
-
-**END FUNCTION**`}
+  RETURN x0
+END FUNCTION
+`}
                   </pre>
                 </>
               }

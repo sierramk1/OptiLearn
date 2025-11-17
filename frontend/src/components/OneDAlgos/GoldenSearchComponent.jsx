@@ -8,9 +8,9 @@ import { createInterpolatedFunction } from '../../js/utils.js';
 
 function GoldenSearchComponent({ optimizationType, data }) {
   // Input states
-  const [funcString, setFuncString] = useState("(x-2)^2");
-  const [aValue, setAValue] = useState("-1");
-  const [bValue, setBValue] = useState("5");
+  const [funcString, setFuncString] = useState("x^3 - x - 1");
+  const [aValue, setAValue] = useState("0");
+  const [bValue, setBValue] = useState("2");
   const [tolerance, setTolerance] = useState("1e-6");
   const [maxIterations, setMaxIterations] = useState("100");
 
@@ -288,7 +288,15 @@ function GoldenSearchComponent({ optimizationType, data }) {
             variant="body2"
             sx={{ fontSize: "1em", lineHeight: 1.75, marginBottom: 1 }}
           >
-            The Golden Section Search is a technique for finding the extremum (minimum or maximum) of a strictly unimodal function.
+            The Golden Search Method is a bracketing optimization algorithm that finds a minimum on an interval without requiring derivatives. It maintains a pair of interior points chosen using the golden ratio, ensuring that when the interval is reduced, one of the points can be reused. The method repeatedly narrows the interval around the minimum in this proportion until it converges.
+          </Typography>
+
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ fontStyle: 'italic', marginBottom: 2 }}
+          >
+            Note: The choice of starting points or interval can affect which root or minimum is found, especially for functions with multiple solutions.
           </Typography>
 
           <Grid container spacing={2} sx={{ width: "100%" }}>
@@ -427,55 +435,50 @@ function GoldenSearchComponent({ optimizationType, data }) {
                 <>
                   <h4>Golden Section Search Pseudocode</h4>
                   <pre
-                    style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}
+                    style={{ whiteSpace: "pre-wrap", wordBreak: "break-word", maxHeight: '500px', overflowY: 'auto' }}
                   >
                     {`# Pseudocode for the Golden Section Search Method
 
-This algorithm finds the extremum (minimum or maximum) of a strictly unimodal function by successively narrowing the range of values inside which the extremum is known to exist. It uses the golden ratio (approximately 1.618) to determine the placement of test points, ensuring the interval shrinks by a constant factor at each step.
+FUNCTION GoldenSectionSearch(f, a, c, tol, max_iter)
 
-**FUNCTION** GoldenSectionSearch(f, a, c, tol, max_iter)
+  // INPUTS:
+  // f: Unimodal function to minimize
+  // a, c: Endpoints of the interval [a, c] that brackets the minimum
+  // tol: Desired tolerance
+  // max_iter: Maximum number of iterations
 
-  // **INPUTS:**
-  // f: The unimodal function to minimize.
-  // a, c: The endpoints of the interval [a, c] that brackets the minimum.
-  // tol: The desired tolerance for the interval width.
-  // max_iter: The maximum number of iterations.
+  // CONSTANT:
+  gr = (1 + sqrt(5)) / 2   // Golden ratio
 
-  // **CONSTANTS:**
-  // gr: The golden ratio (approximately 1.618)
-  gr = (1 + sqrt(5)) / 2
-
-  // **INITIALIZATION:**
-  // Calculate the two inner points b and d using the golden ratio
+  // INITIALIZE inner points
   b = c - (c - a) / gr
   d = a + (c - a) / gr
 
-  // **ITERATION:**
   FOR iter FROM 1 TO max_iter DO
-    // Yield current state for visualization (a, b, d, c)
 
-    // Check for convergence
-    IF abs(c - a) < tol THEN
-      RETURN (a + c) / 2 // Return the midpoint of the final interval
-    END IF
+      // CONVERGENCE CHECK
+      IF ABS(c - a) < tol THEN
+          RETURN (a + c) / 2
+      END IF
 
-    // Compare function values at inner points to narrow the bracket
-    IF f(b) < f(d) THEN
-      c = d // New bracket is [a, d]
-    ELSE
-      a = b // New bracket is [b, c]
-    END IF
+      // UPDATE INTERVAL
+      IF f(b) < f(d) THEN
+          c = d
+      ELSE
+          a = b
+      END IF
 
-    // Recalculate inner points for the new, smaller bracket
-    b = c - (c - a) / gr
-    d = a + (c - a) / gr
+      // RECOMPUTE inner points
+      b = c - (c - a) / gr
+      d = a + (c - a) / gr
 
   END FOR
 
-  // If max_iter reached without convergence
-  RETURN (a + c) / 2 // Return the midpoint of the last interval
+  // If max_iter reached without meeting tolerance
+  RETURN (a + c) / 2
 
-**END FUNCTION**`}
+END FUNCTION
+`}
                   </pre>
                 </>
               }

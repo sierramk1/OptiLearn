@@ -8,9 +8,9 @@ import { createInterpolatedFunction } from '../../js/utils.js';
 
 function BisectionComponent({ optimizationType, data }) {
   // Input states
-  const [funcString, setFuncString] = useState("x*x - 4");
-  const [aValue, setAValue] = useState("0");
-  const [bValue, setBValue] = useState("5");
+  const [funcString, setFuncString] = useState("x^3 - x - 1");
+  const [aValue, setAValue] = useState("1");
+  const [bValue, setBValue] = useState("2");
   const [tolerance, setTolerance] = useState("1e-6");
   const [maxIterations, setMaxIterations] = useState("100");
 
@@ -268,9 +268,15 @@ function BisectionComponent({ optimizationType, data }) {
             variant="body2"
             sx={{ fontSize: "1em", lineHeight: 1.75, marginBottom: 1 }}
           >
-            The Bisection Method is a root-finding algorithm that repeatedly
-            bisects an interval and then selects a sub-interval in which a root
-            must lie for further processing.
+            The Bisection Method is a root-finding algorithm that starts with two points where the function has opposite signs, guaranteeing a root between them. The interval is repeatedly halved, and the sub-interval that still has opposite signs is kept until the method converges.
+          </Typography>
+
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ fontStyle: 'italic', marginBottom: 2 }}
+          >
+            Note: The choice of starting points or interval can affect which root or minimum is found, especially for functions with multiple solutions.
           </Typography>
 
           <Grid container spacing={2} sx={{ width: "100%" }}>
@@ -409,62 +415,52 @@ function BisectionComponent({ optimizationType, data }) {
                 <>
                   <h4>Bisection Method Pseudocode</h4>
                   <pre
-                    style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}
+                    style={{ whiteSpace: "pre-wrap", wordBreak: "break-word", maxHeight: '500px', overflowY: 'auto' }}
                   >
                     {`# Pseudocode for the Bisection Method
 
-This algorithm is a root-finding method that repeatedly bisects an interval and then selects a subinterval in which a root must lie for further processing. It requires the function to be continuous and for the initial interval [a, b] to have f(a) and f(b) with opposite signs, guaranteeing a root within that interval.
+  FUNCTION Bisection(f, a, b, tol, max_iter)
 
-**FUNCTION** Bisection(f, a, b, tol, max_iter)
-  
-  // **INPUTS:**
-  // f: The function for which we are finding a root.
-  // a, b: The endpoints of the interval [a, b].
-  // tol: The desired tolerance (how close to the root we need to be).
-  // max_iter: The maximum number of iterations.
+  // INPUTS:
+  // f: Function whose root we want to find
+  // a, b: Endpoints of the interval [a, b]
+  // tol: Desired tolerance
+  // max_iter: Maximum iterations
 
-  // **PRECONDITION:** Check if a root is guaranteed to be in the interval.
-  // This requires f(a) and f(b) to have opposite signs.
+  // PRECONDITION: f(a) and f(b) must have opposite signs
   IF f(a) * f(b) >= 0 THEN
-    OUTPUT "Error: Root is not guaranteed in this interval (f(a) and f(b) must have opposite signs)."
-    RETURN null
+      OUTPUT "Error: Root not guaranteed (f(a) and f(b) must have opposite signs)."
+      RETURN null
   END IF
 
-  // Initialize iteration counter
   iterations = 0
 
-  // Loop until the maximum number of iterations is reached
   WHILE iterations < max_iter DO
-    // Calculate the midpoint of the interval
-    c = (a + b) / 2
 
-    // **CHECK FOR CONVERGENCE:**
-    // 1. If the function value at the midpoint is very close to zero.
-    // 2. If the width of the interval is smaller than the tolerance.
-    IF f(c) == 0 OR (b - a) / 2 < tol THEN
-      OUTPUT "Root found."
-      RETURN c
-    END IF
+      // Midpoint of the interval
+      c = (a + b) / 2
 
-    // **UPDATE THE INTERVAL:**
-    // If the sign change is between a and c, the root is in the left half.
-    IF f(a) * f(c) < 0 THEN
-      b = c // The new interval is [a, c]
-    // Otherwise, the root is in the right half.
-    ELSE
-      a = c // The new interval is [c, b]
-    END IF
+      // CONVERGENCE CHECKS
+      IF ABS(f(c)) < tol OR (b - a)/2 < tol THEN
+          RETURN c
+      END IF
 
-    // Increment the iteration counter
-    iterations = iterations + 1
+      // INTERVAL UPDATE
+      IF f(a) * f(c) < 0 THEN
+          b = c
+      ELSE
+          a = c
+      END IF
+
+      iterations = iterations + 1
 
   END WHILE
 
-  // If the loop completes without convergence, the method has failed.
-  OUTPUT "Method failed to converge after " + max_iter + " iterations." 
-  RETURN null
+  OUTPUT "Method did not converge in the allotted iterations."
+  RETURN (a + b) / 2
 
-**END FUNCTION**`}
+END FUNCTION
+`}
                   </pre>
                 </>
               }

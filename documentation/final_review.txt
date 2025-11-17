@@ -1,0 +1,53 @@
+Throughout the project, I used Gemini CLI extensively for testing algorithms, creating visualizations, debugging, designing an application, and restructuring my project repository. This experience gave me a good sense of the strengths, weaknesses, and situations where Gemini is useful versus not so much.
+
+Ease of setup and basic use.
+I found the process of installing and setting up Gemini CLI to be easy. Although I could not use my school email for setup, it was relatively easy to link my personal google account. Also, it is easy to start Gemini once it is installed and set up, all it requires is a basic “gemini” command in the terminal. However, it will only have access to the files of the directory you call it in, so keep that in mind. For basic tasks—such as generating Python scripts, fixing little bugs, writing pseudocode, or running Git commands—it preforms extremely well. I like how Gemini usually tells you what it plans to do after you prompt it, and that it will ask for confirmation before running anything. This is nice for the user to understand what is being implemented and why, and makes the tool feel safer.
+
+Strength in small, contained tasks.
+Across all weeks, Gemini consistently excelled at:
+* Fixing small coding mistakes
+* Writing short functions
+* Generating pseudocode and explanations
+* Helping structure a project or suggest folder organization
+* Converting between languages (Python → JS)
+* Suggesting visualizations
+* Explaining algorithms or concepts clearly
+
+When the scope of the prompt was narrow and the file sizes were small, Gemini worked very well and often very fast.
+
+Inconsistencies and fragility with larger files.
+However, as the project grew in size and complexity, Gemini struggled. Larger files or multi-file updates often triggered issues such as:
+* Editing the wrong file or using incorrect file paths
+* Failing to generate valid JSON for Jupyter notebooks
+* Switching strategies mid-task (falling back to writing code through a Python script)
+* Breaking or emptying files without acknowledging touching them
+* Producing partial updates when the file was too long to process
+* Getting “stuck” or looping when the model fell back to the default (non-Pro) mode
+A pretty upsetting issue I ran into was file corruption. Several times I noticed files in my project being emptied despite there being no log of Gemini editing them, and Gemini refusing to admit it touched them. After reproaching online, I found reports from other users who experienced similar problems, which confirmed that these issues were not unique to me. This did significantly reduce my trust in using Gemini on large or important directories. 
+
+Session limitations and memory issues.
+Gemini also lacks memory across sessions unless you explicitly save instructions via the save-memory tool. This does slow down the process when you are working on a big task across several days, as each time Gemini is started it must read the files or catch up on what you are working on. At times I found that the save-memory tool wasn’t working either. While a fix to the memory issue seems like it would be to keep the Gemini session open, in the free version there is a daily limit in the pro model. As projects get bigger and tasks more complex, this daily limit runs out quite fast and the fallback/default model is significantly worse. It often gets stuck in loops, can’t solve moderate tasks, and fails at debugging.
+
+Where Gemini excels.
+Despite these limitations, Gemini has some standout moments:
+* When I transitioned my project from backend + frontend to frontend-only, Gemini completed what it estimated to be “2–3 days of work” in about 30 minutes.
+* It explained debugging techniques (especially console logs) in a way that genuinely improved my own understanding.
+* It helped create meaningful algorithmic visualizations, handle edge cases, and restructure large portions of the project quickly
+
+Overall impression.
+My overall experience is that Gemini CLI is a powerful tool under the right circumstances. It is excellent for:
+* Small coding tasks
+* File creation
+* Quick testing and debugging
+* Conceptual explanations
+* Simple visualizations
+* Git assistance
+
+However, it struggles with:
+* Large files
+* Updates that span multiple files or are very complex
+* Complex project structure 
+* A reliable fallback model
+Give the risk of file deletion and its difficulty handling large files, I would not recommend using Gemini CLI directly on large, important, or irreplaceable project directories. Instead, I would suggest using it in smaller, subfolders.
+
+Despite the frustrations using Gemini at times, this project did give me a meaningful insight into how AI-assisted software development works and how to collaborate meaningfully with AI.
