@@ -292,6 +292,34 @@ function NewtonRaphsonComponent({ optimizationType, data }) {
                 </Grid>
                 </>
             )}
+            {optimizationType === 'data' && (
+                <>
+                <Grid item xs={6}>
+                  <TextField
+                    label="Tolerance"
+                    type="number"
+                    value={tolerance}
+                    onChange={(e) => setTolerance(e.target.value)}
+                    error={errorFields.tolerance}
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    label="Max Iterations"
+                    type="number"
+                    value={maxIterations}
+                    onChange={(e) => setMaxIterations(e.target.value)}
+                    error={errorFields.maxIterations}
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                  />
+                </Grid>
+                </>
+            )}
             <Grid item xs={12}>
               <TextField
                 label="Initial Guess x0"

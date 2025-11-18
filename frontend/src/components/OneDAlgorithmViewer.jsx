@@ -105,7 +105,7 @@ function OneDAlgorithmDisplay() {
       </div>
 
       {optimizationType === 'data' && (
-        <div style={{ padding: '10px 20px' }}>
+        <div style={{ padding: '10px 20px 10px 40px' }}>
           <input
             type="file"
             onChange={handleFileChange}
