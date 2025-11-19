@@ -27,6 +27,12 @@ export const goldenSectionSearch = (func, a, b, tol = 1e-5, maxIter = 100) => {
 };
 
 export const solveGoldenSearch = (optimizationType, expression, initialGuess, data, tolerance, maxIterations) => {
+    if (tolerance < 0) {
+        throw new Error('Tolerance cannot be negative.');
+    }
+    if (maxIterations < 0) {
+        throw new Error('Max iterations cannot be negative.');
+    }
     if (optimizationType === 'function') {
         if (!expression || !initialGuess) {
             throw new Error('Expression and initial guess are required for function optimization.');

@@ -33,6 +33,7 @@ function NewtonsMethodComponent() {
   const [initialGuessStr, setInitialGuessStr] = useState('0, 0');
   const [tolerance, setTolerance] = useState(1e-6);
   const [maxIterations, setMaxIterations] = useState(50);
+  const [error, setError] = useState(null);
   const [path, setPath] = useState([]);
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -175,6 +176,19 @@ function NewtonsMethodComponent() {
   }, [numDimensions, funcStr, fixedDimValues, path, xAxisDim, yAxisDim]);
 
   const handleOptimize = () => {
+    setError(null);
+    if (tolerance <= 0) {
+        setError('Tolerance must be greater than 0 for this algorithm.');
+        return;
+    }
+    if (maxIterations <= 0) {
+        setError('Max iterations must be greater than 0 for this algorithm.');
+        return;
+    }
+    if (numDimensions === 1) {
+        setError('Please use a one-dimensional algorithm for 1D problems.');
+        return;
+    }
     try {
       const initialGuess = initialGuessStr.split(',').map(Number);
       if (initialGuess.length !== numDimensions) {
@@ -362,8 +376,13 @@ function NewtonsMethodComponent() {
           <TextField label="Gradient g(x1, x2, ...)" value={gradStr} onChange={(e) => setGradStr(e.target.value)} fullWidth margin="normal" placeholder="[-2 + 2*x - 400*x*y + 400*x^3, 200*y - 200*x^2]" />
           <TextField label="Hessian H(x1, x2, ...)" value={hessianStr} onChange={(e) => setHessianStr(e.target.value)} fullWidth margin="normal" placeholder="[[2 - 400*y + 1200*x^2, -400*x], [-400*x, 200]]" />
                     <TextField label="Initial Guess" value={initialGuessStr} onChange={(e) => setInitialGuessStr(e.target.value)} fullWidth margin="normal" />
-                    <TextField label="Tolerance" type="number" value={tolerance} onChange={(e) => setTolerance(Number(e.target.value))} fullWidth margin="normal" inputProps={{ step: "1e-7" }} />
+                    <TextField label="Tolerance" type="number" value={tolerance} onChange={(e) => {
+                        if (parseFloat(e.target.value) >= 0 || e.target.value === "") {
+                            setTolerance(Number(e.target.value));
+                        }
+                    }} fullWidth margin="normal" inputProps={{ step: "1e-7" }} />
                     <TextField label="Max Iterations" type="number" value={maxIterations} onChange={(e) => setMaxIterations(Number(e.target.value))} fullWidth margin="normal" />
+                    {error && <Typography color="error">{error}</Typography>}
                     <Button
                       onClick={handleOptimize}
                       variant="contained"

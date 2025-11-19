@@ -33,6 +33,7 @@ function GradientDescentComponent() {
   const [learningRate, setLearningRate] = useState(0.001);
   const [tolerance, setTolerance] = useState(1e-6);
   const [maxIterations, setMaxIterations] = useState(10000);
+  const [error, setError] = useState(null);
   // const [useArmijo, setUseArmijo] = useState(true); // Removed
 
   const [path, setPath] = useState([]);
@@ -170,6 +171,20 @@ function GradientDescentComponent() {
   }, [numDimensions, funcStr, fixedDimValues, path, xAxisDim, yAxisDim]);
 
   const handleOptimize = () => {
+    setError(null);
+    if (tolerance <= 0) {
+        setError('Tolerance must be greater than 0 for this algorithm.');
+        return;
+    }
+    if (maxIterations <= 0) {
+        setError('Max iterations must be greater than 0 for this algorithm.');
+        return;
+    }
+    if (numDimensions === 1) {
+        setError('Please use a one-dimensional algorithm for 1D problems.');
+        return;
+    }
+
     console.log("handleOptimize called"); // Confirm function call
     try {
       const initialGuess = initialGuessStr.split(',').map(Number);
@@ -348,8 +363,13 @@ function GradientDescentComponent() {
           <TextField label="Gradient g(x1, x2, ...)" value={gradStr} onChange={(e) => setGradStr(e.target.value)} fullWidth margin="normal" placeholder="[-2 * (1 - x) - 400 * x * (y - x^2), 200 * (y - x^2)]" />
           <TextField label="Initial Guess (comma-separated)" value={initialGuessStr} onChange={(e) => setInitialGuessStr(e.target.value)} fullWidth margin="normal" />
           <TextField label="Learning Rate (alpha)" type="number" value={learningRate} onChange={(e) => setLearningRate(Number(e.target.value))} fullWidth margin="normal" inputProps={{ step: "0.0001" }} />
-          <TextField label="Tolerance" type="number" value={tolerance} onChange={(e) => setTolerance(Number(e.target.value))} fullWidth margin="normal" inputProps={{ step: "1e-7" }} />
+          <TextField label="Tolerance" type="number" value={tolerance} onChange={(e) => {
+            if (parseFloat(e.target.value) >= 0 || e.target.value === "") {
+                setTolerance(Number(e.target.value));
+            }
+          }} fullWidth margin="normal" inputProps={{ step: "1e-7" }} />
           <TextField label="Max Iterations" type="number" value={maxIterations} onChange={(e) => setMaxIterations(Number(e.target.value))} fullWidth margin="normal" />
+          {error && <Typography color="error">{error}</Typography>}
           {/* Removed Armijo Line Search */}
           <Button 
             onClick={handleOptimize} 

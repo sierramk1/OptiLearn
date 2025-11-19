@@ -5,15 +5,15 @@ Optimization algorithms are central to modern computer science, engineering, and
 
 To address this gap, I propose to develop OptiLearn, an interactive visualization tool for six optimization algorithms: Bisection, Secant, Newton-Raphson, Golden Search, Gradient Descent and Newton’s Method. My goal is to provide an educational resource that allows users to learn about these algorithms by exploring convergence behavior, adjusting algorithm parameters, and comparing the efficiency and accuracy of different methods. Users will not only be able to observe the algorithmic behavior, but also interact with it, fostering a deeper understanding of the foundations of optimization algorithms.
 
-A key aspect of this project is the integration of generative AI into the development process. I plan to incorporate it into a vibe-coding workflow, using it to generate and debug code, and suggest UI layouts to support the interactivity of the visualization tool. It will also assist in leveraging additional software tools, such as building the application in JavaScript, and creating dynamic, interactive visualizations using Plotly, D3.js, and ipywidgets. By combining mathematical explanations, interactive visualizations, and generative AI tools, this project will produce an engaging, educational resource for learning optimization algorithms. As a rapidly advancing area of statistics, optimization holds great potential to make processes faster, more scalable, and more efficient, and I want to provide a resource for people to experiment with algorithms, explore convergence behavior, and deepen their understanding. 
+A key aspect of this project is the integration of generative AI into the development process. I incorporated it into a vibe-coding workflow, using it to generate and debug code, and suggest UI layouts to support the interactivity of the visualization tool. By combining mathematical explanations, interactive visualizations, and generative AI tools, this project will produce an engaging, educational resource for learning optimization algorithms. As a rapidly advancing area of statistics, optimization holds great potential to make processes faster, more scalable, and more efficient, and I want to provide a resource for people to experiment with algorithms, explore convergence behavior, and deepen their understanding. 
 
-To follow the project for reproduction, you can download the files and run the application locally. The repository includes all necessary code, dependencies, and instructions to set up the environment. Users can interact with each optimization algorithm, adjust parameters, and visualize convergence behavior in real time. Detailed documentation and comments are provided to explain the implementation, as well as how generative AI was leveraged in the development process.
+To follow the project for reproduction, you can download the frontend directory and run the application locally. The repository includes all necessary code, dependencies, and instructions to set up the environment. Users can interact with each optimization algorithm, adjust parameters, and visualize convergence behavior in real time. Detailed documentation and comments are provided to explain the implementation, as well as how generative AI was leveraged in the development process.
+
+You can also visit the application at: https://opti-learn.vercel.app/ 
 
 ```text
 OptiLearn/
-├── algorithms/ # Python implementations of the optimization algorithms
-├── notebooks/ # Jupyter notebooks for testing and demonstrating algorithms
-├── visualizations/ # Saved plots and interactive visualization outputs
+├── experiments/ # Experimental code, prototypes, and learning materials
 ├── frontend/ # JavaScript/HTML files for interactive UI
 ├── documentation/ # Development logs, screenshots, tutorial materials
 └── README.md # Project description and instructions

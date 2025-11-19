@@ -298,11 +298,16 @@ function BisectionComponent({ optimizationType, data }) {
                     label="Tolerance"
                     type="number"
                     value={tolerance}
-                    onChange={(e) => setTolerance(e.target.value)}
+                    onChange={(e) => {
+                        if (parseFloat(e.target.value) >= 0 || e.target.value === "") {
+                            setTolerance(e.target.value);
+                        }
+                    }}
                     error={errorFields.tolerance}
                     variant="outlined"
                     size="small"
                     fullWidth
+                    inputProps={{ step: "1e-7" }}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -326,11 +331,16 @@ function BisectionComponent({ optimizationType, data }) {
                     label="Tolerance"
                     type="number"
                     value={tolerance}
-                    onChange={(e) => setTolerance(e.target.value)}
+                    onChange={(e) => {
+                        if (parseFloat(e.target.value) >= 0 || e.target.value === "") {
+                            setTolerance(e.target.value);
+                        }
+                    }}
                     error={errorFields.tolerance}
                     variant="outlined"
                     size="small"
                     fullWidth
+                    inputProps={{ step: "1e-7" }}
                   />
                 </Grid>
                 <Grid item xs={6}>
