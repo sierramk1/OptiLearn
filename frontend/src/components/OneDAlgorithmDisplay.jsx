@@ -20,7 +20,7 @@ function OneDAlgorithmDisplay() {
           style={{
             padding: '8px 15px',
             fontSize: '2.5em', // Make it look like a header
-            backgroundColor: '#72A8C8',
+            backgroundColor: '#5A86A4',
             color: 'white',
             border: 'none',
             borderRadius: '5px',

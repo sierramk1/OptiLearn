@@ -50,11 +50,12 @@ function MultiDimAlgorithmDisplay() {
                 border: 'none',
               },
               '& .MuiSelect-select': {
-                backgroundColor: 'transparent',
+                backgroundColor: '#72A8C8',
+                color: 'white',
                 borderRadius: '50px',
                 padding: '8px 32px 8px 20px',
                 '&:hover': {
-                  backgroundColor: '#e0e0e0',
+                  backgroundColor: '#5A86A4',
                 },
               },
             }}
