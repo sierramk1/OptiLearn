@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "kmeans-js": "^0.1.2"
+  }
+}

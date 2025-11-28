@@ -19,10 +19,9 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  // Tooltip, // Removed
-  // IconButton // Removed
+  FormControlLabel,
+  Checkbox,
 } from '@mui/material';
-// import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'; // Removed
 import * as math from 'mathjs';
 import Plot from 'react-plotly.js';
 
@@ -34,7 +33,7 @@ function GradientDescentComponent() {
   const [tolerance, setTolerance] = useState(1e-6);
   const [maxIterations, setMaxIterations] = useState(10000);
   const [error, setError] = useState(null);
-  // const [useArmijo, setUseArmijo] = useState(true); // Removed
+  const [autoCalcGradient, setAutoCalcGradient] = useState(true);
 
   const [path, setPath] = useState([]);
   const [currentStep, setCurrentStep] = useState(0);
@@ -50,7 +49,19 @@ function GradientDescentComponent() {
   const [xAxisDim, setXAxisDim] = useState(0);
   const [yAxisDim, setYAxisDim] = useState(1);
   const [numDimensionsInput, setNumDimensionsInput] = useState('2');
-  // const [isZoomedIn, setIsZoomedIn] = useState(true); // Removed
+
+  useEffect(() => {
+    if (autoCalcGradient) {
+      try {
+        const varNames = numDimensions === 2 ? ['x', 'y'] : Array.from({ length: numDimensions }, (_, i) => `x${i + 1}`);
+        const gradParts = varNames.map(v => math.derivative(funcStr, v).toString());
+        setGradStr(`[${gradParts.join(', ')}]`);
+      } catch (e) {
+        console.error("Error calculating gradient:", e);
+        setGradStr(''); // Clear on error
+      }
+    }
+  }, [funcStr, autoCalcGradient, numDimensions]);
 
   const handleDimChange = (e) => {
     const val = e.target.value;
@@ -360,7 +371,24 @@ function GradientDescentComponent() {
           </Typography>
           <TextField label="Number of Dimensions" type="number" value={numDimensionsInput} onChange={handleDimChange} fullWidth margin="normal" />
           <TextField label="Function f(x1, x2, ...)" value={funcStr} onChange={(e) => setFuncStr(e.target.value)} fullWidth margin="normal" placeholder="(1 - x)^2 + 100 * (y - x^2)^2" />
-          <TextField label="Gradient g(x1, x2, ...)" value={gradStr} onChange={(e) => setGradStr(e.target.value)} fullWidth margin="normal" placeholder="[-2 * (1 - x) - 400 * x * (y - x^2), 200 * (y - x^2)]" />
+          <FormControlLabel
+            control={<Checkbox checked={autoCalcGradient} onChange={(e) => setAutoCalcGradient(e.target.checked)} />}
+            label="Automatically Calculate Gradient"
+          />
+          <TextField
+            label="Gradient g(x1, x2, ...)"
+            value={gradStr}
+            onChange={(e) => setGradStr(e.target.value)}
+            fullWidth
+            margin="normal"
+            placeholder="[-2 * (1 - x) - 400 * x * (y - x^2), 200 * (y - x^2)]"
+            disabled={autoCalcGradient}
+            InputProps={{
+              style: {
+                backgroundColor: autoCalcGradient ? '#f0f0f0' : 'inherit'
+              }
+            }}
+          />
           <TextField label="Initial Guess (comma-separated)" value={initialGuessStr} onChange={(e) => setInitialGuessStr(e.target.value)} fullWidth margin="normal" />
           <TextField label="Learning Rate (alpha)" type="number" value={learningRate} onChange={(e) => setLearningRate(Number(e.target.value))} fullWidth margin="normal" inputProps={{ step: "0.0001" }} />
           <TextField label="Tolerance" type="number" value={tolerance} onChange={(e) => {

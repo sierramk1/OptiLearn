@@ -19,12 +19,11 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  // Tooltip, // Removed
-  // IconButton // Removed
+  FormControlLabel,
+  Checkbox,
 } from '@mui/material';
 import * as math from 'mathjs';
 import Plot from 'react-plotly.js';
-// import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'; // Removed
 
 function NewtonsMethodComponent() {
   const [funcStr, setFuncStr] = useState('(1 - x)^2 + 100 * (y - x^2)^2');
@@ -34,6 +33,7 @@ function NewtonsMethodComponent() {
   const [tolerance, setTolerance] = useState(1e-6);
   const [maxIterations, setMaxIterations] = useState(50);
   const [error, setError] = useState(null);
+  const [autoCalcDerivatives, setAutoCalcDerivatives] = useState(true);
   const [path, setPath] = useState([]);
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -48,6 +48,32 @@ function NewtonsMethodComponent() {
   const [fixedDimValues, setFixedDimValues] = useState({});
   const [xAxisDim, setXAxisDim] = useState(0);
   const [yAxisDim, setYAxisDim] = useState(1);
+
+  useEffect(() => {
+    if (autoCalcDerivatives) {
+      try {
+        const varNames = numDimensions === 2 ? ['x', 'y'] : Array.from({ length: numDimensions }, (_, i) => `x${i + 1}`);
+        
+        // Gradient
+        const gradParts = varNames.map(v => math.derivative(funcStr, v).toString());
+        setGradStr(`[${gradParts.join(', ')}]`);
+  
+        // Hessian
+        const hessianMatrix = varNames.map((v1, i) => {
+          const firstDeriv = gradParts[i];
+          return varNames.map(v2 => {
+            return math.derivative(firstDeriv, v2).toString();
+          });
+        });
+        setHessianStr(`[${hessianMatrix.map(row => `[${row.join(', ')}]`).join(', ')}]`);
+  
+      } catch (e) {
+        console.error("Error calculating derivatives:", e);
+        setGradStr('');
+        setHessianStr('');
+      }
+    }
+  }, [funcStr, autoCalcDerivatives, numDimensions]);
 
   const handleDimChange = (e) => {
     const val = e.target.value;
@@ -373,22 +399,52 @@ function NewtonsMethodComponent() {
           </Typography>
           <TextField label="Number of Dimensions" type="number" value={numDimensionsInput} onChange={handleDimChange} fullWidth margin="normal" />
           <TextField label="Function f(x1, x2, ...)" value={funcStr} onChange={(e) => setFuncStr(e.target.value)} fullWidth margin="normal" placeholder="(1 - x)^2 + 100 * (y - x^2)^2" />
-          <TextField label="Gradient g(x1, x2, ...)" value={gradStr} onChange={(e) => setGradStr(e.target.value)} fullWidth margin="normal" placeholder="[-2 + 2*x - 400*x*y + 400*x^3, 200*y - 200*x^2]" />
-          <TextField label="Hessian H(x1, x2, ...)" value={hessianStr} onChange={(e) => setHessianStr(e.target.value)} fullWidth margin="normal" placeholder="[[2 - 400*y + 1200*x^2, -400*x], [-400*x, 200]]" />
-                    <TextField label="Initial Guess" value={initialGuessStr} onChange={(e) => setInitialGuessStr(e.target.value)} fullWidth margin="normal" />
-                    <TextField label="Tolerance" type="number" value={tolerance} onChange={(e) => {
-                        if (parseFloat(e.target.value) >= 0 || e.target.value === "") {
-                            setTolerance(Number(e.target.value));
-                        }
-                    }} fullWidth margin="normal" inputProps={{ step: "1e-7" }} />
-                    <TextField label="Max Iterations" type="number" value={maxIterations} onChange={(e) => setMaxIterations(Number(e.target.value))} fullWidth margin="normal" />
-                    {error && <Typography color="error">{error}</Typography>}
-                    <Button
-                      onClick={handleOptimize}
-                      variant="contained"
-                      fullWidth
-                      sx={{ mt: 2, backgroundColor: '#72A8C8', '&:hover': { backgroundColor: '#5a8fa8' } }}
-                    >            Optimize
+          <FormControlLabel
+            control={<Checkbox checked={autoCalcDerivatives} onChange={(e) => setAutoCalcDerivatives(e.target.checked)} />}
+            label="Automatically Calculate Gradient and Hessian"
+          />
+          <TextField
+            label="Gradient g(x1, x2, ...)"
+            value={gradStr}
+            onChange={(e) => setGradStr(e.target.value)}
+            fullWidth
+            margin="normal"
+            placeholder="[-2 + 2*x - 400*x*y + 400*x^3, 200*y - 200*x^2]"
+            disabled={autoCalcDerivatives}
+            InputProps={{
+              style: {
+                backgroundColor: autoCalcDerivatives ? '#f0f0f0' : 'inherit'
+              }
+            }}
+          />
+          <TextField
+            label="Hessian H(x1, x2, ...)"
+            value={hessianStr}
+            onChange={(e) => setHessianStr(e.target.value)}
+            fullWidth
+            margin="normal"
+            placeholder="[[2 - 400*y + 1200*x^2, -400*x], [-400*x, 200]]"
+            disabled={autoCalcDerivatives}
+            InputProps={{
+              style: {
+                backgroundColor: autoCalcDerivatives ? '#f0f0f0' : 'inherit'
+              }
+            }}
+          />
+          <TextField label="Initial Guess" value={initialGuessStr} onChange={(e) => setInitialGuessStr(e.target.value)} fullWidth margin="normal" />
+          <TextField label="Tolerance" type="number" value={tolerance} onChange={(e) => {
+              if (parseFloat(e.target.value) >= 0 || e.target.value === "") {
+                  setTolerance(Number(e.target.value));
+              }
+          }} fullWidth margin="normal" inputProps={{ step: "1e-7" }} />
+          <TextField label="Max Iterations" type="number" value={maxIterations} onChange={(e) => setMaxIterations(Number(e.target.value))} fullWidth margin="normal" />
+          {error && <Typography color="error">{error}</Typography>}
+          <Button
+            onClick={handleOptimize}
+            variant="contained"
+            fullWidth
+            sx={{ mt: 2, backgroundColor: '#72A8C8', '&:hover': { backgroundColor: '#5a8fa8' } }}
+          >            Optimize
           </Button>
           {numDimensions > 2 && (
             <Box sx={{ mt: 2 }}>
