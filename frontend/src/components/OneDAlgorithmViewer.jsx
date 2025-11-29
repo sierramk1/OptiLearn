@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Select, MenuItem, FormControl, ToggleButtonGroup, ToggleButton, Button } from '@mui/material';
+import { Select, MenuItem, FormControl, ToggleButtonGroup, ToggleButton, Button, Typography } from '@mui/material';
 import BisectionComponent from './OneDAlgos/BisectionComponent.jsx';
 import GoldenSearchComponent from './OneDAlgos/GoldenSearchComponent.jsx';
 import NewtonRaphsonComponent from './OneDAlgos/NewtonRaphsonComponent.jsx';
@@ -107,12 +107,15 @@ function OneDAlgorithmDisplay() {
 
       {optimizationType === 'data' && (
         <div style={{ padding: '10px 20px 10px 40px' }}>
+          <Typography variant="body1" sx={{ marginBottom: '10px', width: '100%' }}>
+            To get started, click Choose File to select a two-column CSV containing your x and y values, then click Upload. Once the function is created, you can run any of the optimization algorithms below to estimate where the minimum occurs.
+          </Typography>
           <input
             type="file"
             onChange={handleFileChange}
             accept=".csv"
           />
-          <Button onClick={handleFileUpload} variant="contained">Upload</Button>
+          <Button onClick={handleFileUpload} variant="contained" sx={{ backgroundColor: '#72A8C8', '&:hover': { backgroundColor: '#5a8fa8' } }}>Upload</Button>
         </div>
       )}
 
@@ -124,3 +127,4 @@ function OneDAlgorithmDisplay() {
 }
 
 export default OneDAlgorithmDisplay;
+
