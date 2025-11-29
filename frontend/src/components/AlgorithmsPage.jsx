@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
 import OneDAlgorithmViewer from './OneDAlgorithmViewer.jsx';
-import MultiDimAlgorithmDisplay from './MultiDimAlgorithmViewer.jsx';
+import MultiDimAlgorithmViewer from './MultiDimAlgorithmViewer.jsx';
 
 function AlgorithmsPage() {
   const location = useLocation();
@@ -132,7 +132,7 @@ function AlgorithmsPage() {
           </>
         ) : (
           <>
-          <MultiDimAlgorithmDisplay />
+          <MultiDimAlgorithmViewer />
           </>
         )}
       </div>

@@ -13,6 +13,7 @@
     "@testing-library/user-event": "^13.5.0",
     "cubic-spline": "^3.0.3",
     "mathjs": "^12.4.1",
+    "ml-kmeans": "^7.0.0",
     "plotly.js": "^2.29.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

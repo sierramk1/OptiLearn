@@ -1,4 +1,4 @@
-const math = require("mathjs");
+import * as math from 'mathjs';
 
 /**
  * Performs multi-dimensional Gradient Descent to find the minimum of a function.
@@ -14,7 +14,7 @@ const math = require("mathjs");
  * @param {...any} args Additional arguments to pass to f and g.
  * @returns {{xmin: number[], fmin: number, step_size: number, convergence: boolean, iter: number, path: number[][]}}
  */
-function gradientDescent(f, g, x0, step_size = 0.0001, update_step_size = true, tol = 1e-10, max_iter = 5000, ...args) {
+export function gradientDescent(f, g, x0, step_size = 0.0001, update_step_size = true, tol = 1e-10, max_iter = 5000, ...args) {
     let current_x = x0;
     let f0 = f(current_x, ...args);
     let g0 = g(current_x, ...args);
@@ -53,5 +53,3 @@ function gradientDescent(f, g, x0, step_size = 0.0001, update_step_size = true, 
 
     return { xmin: current_x, fmin: f0, step_size: current_step_size, convergence: false, iter: max_iter, path: path };
 }
-
-module.exports = { gradientDescent };
