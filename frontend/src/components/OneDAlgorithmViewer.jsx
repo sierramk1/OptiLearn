@@ -108,7 +108,7 @@ function OneDAlgorithmDisplay() {
       {optimizationType === 'data' && (
         <div style={{ padding: '10px 20px 10px 40px' }}>
           <Typography variant="body1" sx={{ marginBottom: '10px', width: '100%' }}>
-            To get started, click Choose File to select a two-column CSV containing your x and y values, then click Upload. Once the function is created, you can run any of the optimization algorithms below to estimate where the minimum occurs.
+            To get started, click Choose File to select a two-column CSV containing your x and y values, then choose an interpolation method—cubic spline or piecewise linear—to turn your data into a function, and click Upload. Once the function is plotted, you can run any of the optimization algorithms to estimate where the minimum occurs.
           </Typography>
           <input
             type="file"
