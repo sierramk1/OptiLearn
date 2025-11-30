@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { TextField, Button, Alert, Typography, Box, Grid } from "@mui/material";
+import { TextField, Button, Alert, Typography, Box, Grid, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import GraphWithControls from "../common/GraphWithControls.jsx";
 import * as math from 'mathjs';
 import { solveGoldenSearch } from '../../js/golden_search.js';
@@ -14,6 +14,7 @@ function GoldenSearchComponent({ optimizationType, data }) {
   const [cValue, setCValue] = useState("2");
   const [tolerance, setTolerance] = useState("1e-6");
   const [maxIterations, setMaxIterations] = useState("100");
+  const [interpolationType, setInterpolationType] = useState('cubic');
 
   // Animation states
   const [animationSteps, setAnimationSteps] = useState([]);
@@ -34,6 +35,19 @@ function GoldenSearchComponent({ optimizationType, data }) {
   // Toggle state for graph/description
   const [showGraph, setShowGraph] = useState(true);
 
+  useEffect(() => {
+    if (optimizationType === 'data' && data && data.length >= 3) {
+      for (let i = 1; i < data.length - 1; i++) {
+        if (data[i].y < data[i-1].y && data[i].y < data[i+1].y) {
+          setAValue(data[i-1].x.toString());
+          setBValue(data[i].x.toString());
+          setCValue(data[i+1].x.toString());
+          return; // Stop after finding the first local minimum
+        }
+      }
+    }
+  }, [data, optimizationType]);
+
   const myFunction = useCallback(
     (x) => {
         if (optimizationType === 'function') {
@@ -44,12 +58,12 @@ function GoldenSearchComponent({ optimizationType, data }) {
             }
         } else if (optimizationType === 'data' && data) {
             // Use the client-side createInterpolatedFunction
-            const interpolatedFunc = createInterpolatedFunction(data);
+            const interpolatedFunc = createInterpolatedFunction(data, interpolationType);
             return interpolatedFunc(x);
         }
         return NaN;
     },
-    [funcString, optimizationType, data]
+    [funcString, optimizationType, data, interpolationType]
   );
 
   const handleOptimize = async () => {
@@ -90,7 +104,11 @@ function GoldenSearchComponent({ optimizationType, data }) {
     const fc = myFunction(c);
 
     if (!(fb < fa && fb < fc)) {
-      setError('The condition f(b) < f(a) and f(b) < f(c) must be met to bracket a minimum.');
+      let errorMessage = 'The condition f(b) < f(a) and f(b) < f(c) must be met to bracket a minimum.';
+      if (optimizationType === 'data' && interpolationType === 'piecewise') {
+        errorMessage += ' With piecewise linear interpolation, try choosing initial points a, b, and c that coincide with your data points, ensuring b is a local minimum in your data.';
+      }
+      setError(errorMessage);
       return;
     }
 
@@ -102,7 +120,8 @@ function GoldenSearchComponent({ optimizationType, data }) {
         { a, b, c },    // initialGuess
         data,        // data (will be used if optimizationType is 'data')
         tol,         // tolerance
-        maxIter      // maxIterations
+        maxIter,      // maxIterations
+        interpolationType
       );
 
       setAnimationSteps(result.steps);
@@ -277,7 +296,7 @@ function GoldenSearchComponent({ optimizationType, data }) {
       }
       setPlotData(newPlotData);
 
-  }, [funcString, aValue, cValue, optimizationType, data, myFunction, result, animationSteps, currentStepIndex]);
+  }, [funcString, aValue, cValue, optimizationType, data, myFunction, result, animationSteps, currentStepIndex, interpolationType]);
 
   return (
     <div
@@ -372,6 +391,24 @@ function GoldenSearchComponent({ optimizationType, data }) {
             )}
             {optimizationType === 'data' && (
                 <>
+                <Grid item xs={12}>
+                  <ToggleButtonGroup
+                    color="primary"
+                    value={interpolationType}
+                    exclusive
+                    onChange={(event, newType) => {
+                      if (newType !== null) {
+                        setInterpolationType(newType);
+                      }
+                    }}
+                    aria-label="Interpolation Type"
+                    size="small"
+                    fullWidth
+                  >
+                    <ToggleButton value="cubic">Cubic Spline</ToggleButton>
+                    <ToggleButton value="piecewise">Piecewise Linear</ToggleButton>
+                  </ToggleButtonGroup>
+                </Grid>
                 <Grid item xs={6}>
                   <TextField
                     label="Tolerance"

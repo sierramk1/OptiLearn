@@ -40,7 +40,7 @@ export const newtonRaphson = (func, initialGuess, tol = 1e-5, maxIter = 100) => 
     return steps; // Return the steps taken
 };
 
-export const solveNewtonRaphson = (optimizationType, expression, initialGuess, data, tolerance, maxIterations) => {
+export const solveNewtonRaphson = (optimizationType, expression, initialGuess, data, tolerance, maxIterations, interpolationType = 'cubic') => {
     if (tolerance < 0) {
         throw new Error('Tolerance cannot be negative.');
     }
@@ -57,7 +57,7 @@ export const solveNewtonRaphson = (optimizationType, expression, initialGuess, d
         if (!data || initialGuess === undefined) {
             throw new Error('Data and initial guess are required for data optimization.');
         }
-        const interpolatedFunc = createInterpolatedFunction(data);
+        const interpolatedFunc = createInterpolatedFunction(data, interpolationType);
         return newtonRaphson(interpolatedFunc, initialGuess, tolerance, maxIterations);
 
     } else {

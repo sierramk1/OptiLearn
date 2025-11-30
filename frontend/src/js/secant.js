@@ -31,7 +31,7 @@ export const secant = (func, x0, x1, tol = 1e-5, maxIter = 100) => {
     return steps; // Return the steps taken
 };
 
-export const solveSecant = (optimizationType, expression, initialGuess, data, tolerance, maxIterations) => {
+export const solveSecant = (optimizationType, expression, initialGuess, data, tolerance, maxIterations, interpolationType = 'cubic') => {
     if (tolerance < 0) {
         throw new Error('Tolerance cannot be negative.');
     }
@@ -49,7 +49,7 @@ export const solveSecant = (optimizationType, expression, initialGuess, data, to
         if (!data || !initialGuess) {
             throw new Error('Data and initial guess are required for data optimization.');
         }
-        const interpolatedFunc = createInterpolatedFunction(data);
+        const interpolatedFunc = createInterpolatedFunction(data, interpolationType);
         const { x0, x1 } = initialGuess;
         return secant(interpolatedFunc, x0, x1, tolerance, maxIterations);
 

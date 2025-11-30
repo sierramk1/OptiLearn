@@ -26,7 +26,7 @@ export const bisection = (func, a, b, tol = 1e-5, maxIter = 100) => {
 
 // This function will be called from the React component (e.g., BisectionComponent.jsx)
 // It encapsulates the logic for handling 'function' and 'data' optimization types
-export const solveBisection = (optimizationType, expression, initialGuess, data, tolerance, maxIterations) => {
+export const solveBisection = (optimizationType, expression, initialGuess, data, tolerance, maxIterations, interpolationType = 'cubic') => {
     if (tolerance < 0) {
         throw new Error('Tolerance cannot be negative.');
     }
@@ -44,7 +44,7 @@ export const solveBisection = (optimizationType, expression, initialGuess, data,
         if (!data || !initialGuess) {
             throw new Error('Data and initial guess are required for data optimization.');
         }
-        const interpolatedFunc = createInterpolatedFunction(data);
+        const interpolatedFunc = createInterpolatedFunction(data, interpolationType);
         const { a, b } = initialGuess;
         return bisection(interpolatedFunc, a, b, tolerance, maxIterations);
 

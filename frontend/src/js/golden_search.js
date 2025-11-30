@@ -67,7 +67,7 @@ export const goldenSectionSearch = (func, a, b, c, tol = 1e-8, maxIter = 1000) =
   };
 };
 
-export const solveGoldenSearch = (optimizationType, expression, initialGuess, data, tolerance, maxIterations) => {
+export const solveGoldenSearch = (optimizationType, expression, initialGuess, data, tolerance, maxIterations, interpolationType = 'cubic') => {
     if (tolerance < 0) {
         throw new Error('Tolerance cannot be negative.');
     }
@@ -85,7 +85,7 @@ export const solveGoldenSearch = (optimizationType, expression, initialGuess, da
         if (!data || !initialGuess) {
             throw new Error('Data and initial guess are required for data optimization.');
         }
-        const interpolatedFunc = createInterpolatedFunction(data);
+        const interpolatedFunc = createInterpolatedFunction(data, interpolationType);
         const { a, b, c } = initialGuess;
         return goldenSectionSearch(interpolatedFunc, a, b, c, tolerance, maxIterations);
 

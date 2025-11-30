@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { TextField, Button, Alert, Typography, Box, Grid } from "@mui/material";
+import { TextField, Button, Alert, Typography, Box, Grid, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import GraphWithControls from "../common/GraphWithControls.jsx";
 import * as math from 'mathjs';
 import { solveBisection } from '../../js/bisection.js';
@@ -13,6 +13,7 @@ function BisectionComponent({ optimizationType, data }) {
   const [bValue, setBValue] = useState("2");
   const [tolerance, setTolerance] = useState("1e-6");
   const [maxIterations, setMaxIterations] = useState("100");
+  const [interpolationType, setInterpolationType] = useState('cubic');
 
   // Animation states
   const [animationSteps, setAnimationSteps] = useState([]);
@@ -57,7 +58,8 @@ function BisectionComponent({ optimizationType, data }) {
         { a, b },    // initialGuess
         data,        // data (will be used if optimizationType is 'data')
         tol,         // tolerance
-        maxIter      // maxIterations
+        maxIter,      // maxIterations
+        interpolationType
       );
 
       setAnimationSteps(resultSteps);
@@ -78,12 +80,12 @@ function BisectionComponent({ optimizationType, data }) {
             }
         } else if (optimizationType === 'data' && data) {
             // Use the client-side createInterpolatedFunction
-            const interpolatedFunc = createInterpolatedFunction(data);
+            const interpolatedFunc = createInterpolatedFunction(data, interpolationType);
             return interpolatedFunc(x);
         }
         return NaN;
     },
-    [funcString, optimizationType, data]
+    [funcString, optimizationType, data, interpolationType]
   );
 
   // --- Animation Control and Navigations ---
@@ -231,7 +233,7 @@ function BisectionComponent({ optimizationType, data }) {
       }
       setPlotData(newPlotData);
 
-  }, [funcString, aValue, bValue, optimizationType, data, myFunction, result, animationSteps, currentStepIndex]);
+  }, [funcString, aValue, bValue, optimizationType, data, myFunction, result, animationSteps, currentStepIndex, interpolationType]);
 
   return (
     <div
@@ -326,6 +328,24 @@ function BisectionComponent({ optimizationType, data }) {
             )}
             {optimizationType === 'data' && (
                 <>
+                <Grid item xs={12}>
+                  <ToggleButtonGroup
+                    color="primary"
+                    value={interpolationType}
+                    exclusive
+                    onChange={(event, newType) => {
+                      if (newType !== null) {
+                        setInterpolationType(newType);
+                      }
+                    }}
+                    aria-label="Interpolation Type"
+                    size="small"
+                    fullWidth
+                  >
+                    <ToggleButton value="cubic">Cubic Spline</ToggleButton>
+                    <ToggleButton value="piecewise">Piecewise Linear</ToggleButton>
+                  </ToggleButtonGroup>
+                </Grid>
                 <Grid item xs={6}>
                   <TextField
                     label="Tolerance"
