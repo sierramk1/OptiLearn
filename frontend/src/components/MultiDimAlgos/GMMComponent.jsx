@@ -4,12 +4,14 @@ import Plot from 'react-plotly.js';
 import { generateGMMData } from '../../js/data_generators.js';
 import { runEM } from '../../js/gmm_mle.js';
 import math from '../../js/math_config.js';
+import { eigenDecomposition2x2 } from '../../js/math_linear_algebra.js';
 
 function GMMComponent() {
     // UI Controls State
     const [nSamples, setNSamples] = useState(400);
     const [nComponents, setNComponents] = useState(3);
-    const [randomSeed, setRandomSeed] = useState(42);
+    const [maxIterations, setMaxIterations] = useState(100);
+    const [tolerance, setTolerance] = useState(1e-4);
 
     // Data State
     const [data, setData] = useState([]);
@@ -30,14 +32,11 @@ function GMMComponent() {
             setError(null);
             setEmHistory([]);
             setCurrentIteration(0);
-            // DEBUG: Use dummy data to isolate the problem
-            const dummyData = [[1, 2], [1.5, 2.5], [2, 3], [8, 9], [8.5, 9.5], [9, 10]];
-            const dummyParams = [
-                { weight: 0.5, mean: [1.5, 2.5], cov: [[1, 0], [0, 1]] },
-                { weight: 0.5, mean: [8.5, 9.5], cov: [[1, 0], [0, 1]] }
-            ];
-            setData(dummyData);
-            setTrueParams(dummyParams);
+            // nSamples is now total samples, so points_per_cluster = nSamples / nComponents
+            const pointsPerCluster = Math.floor(nSamples / nComponents);
+            const { data: generatedData, trueParams: generatedParams } = generateGMMData(nComponents, 2, pointsPerCluster);
+            setData(generatedData);
+            setTrueParams(generatedParams);
         } catch (e) {
             setError(e.message);
         }
@@ -50,10 +49,14 @@ function GMMComponent() {
         }
         try {
             setError(null);
-            const { history, converged: emConverged } = runEM(data, nComponents);
+            console.log("Calling runEM...");
+            const { history, converged: emConverged } = runEM(data, nComponents, maxIterations, tolerance);
+            console.log("runEM returned. History length:", history.length, "Converged:", emConverged);
             setEmHistory(history);
             setConverged(emConverged);
             setCurrentIteration(0);
+            console.log("emHistory state after set:", history);
+            console.log("Converged state after set:", emConverged);
         } catch (e) {
             setError(e.message);
         }
@@ -74,26 +77,34 @@ function GMMComponent() {
         handleGenerateData();
     }, []);
 
+    const getEllipse = (mean, cov, scale = 2) => {
+        const eig = eigenDecomposition2x2(cov);
+        const [λ1, λ2] = eig.values;
+        const [v1, v2] = eig.vectors;
 
-    const getEllipse = (mean, cov, n_std_dev = 2) => {
-        const eig = math.eigs(cov);
-        const eigenvalues = eig.values;
-        const eigenvectors = eig.eigenvectors;
-        
-        const angle = Math.atan2(eigenvectors[1][0], eigenvectors[0][0]);
-        const a = n_std_dev * Math.sqrt(eigenvalues[0]);
-        const b = n_std_dev * Math.sqrt(eigenvalues[1]);
+        const angle = Math.atan2(v1[1], v1[0]);
+        const a = scale * Math.sqrt(λ1);
+        const b = scale * Math.sqrt(λ2);
 
         const N = 100;
-        const t = Array.from({length: N}, (_, i) => (i / (N - 1)) * 2 * Math.PI);
-        const x = t.map(val => a * Math.cos(val));
-        const y = t.map(val => b * Math.sin(val));
+        let t = [...Array(N).keys()].map(i => (i / (N - 1)) * 2 * Math.PI);
 
-        const rotatedX = x.map((val, i) => mean[0] + val * Math.cos(angle) - y[i] * Math.sin(angle));
-        const rotatedY = y.map((val, i) => mean[1] + val * Math.sin(angle) + y[i] * Math.cos(angle));
+        const x = t.map(theta => a * Math.cos(theta));
+        const y = t.map(theta => b * Math.sin(theta));
 
-        return {x: rotatedX, y: rotatedY};
+        const pointsX = [];
+        const pointsY = [];
+
+        for (let i = 0; i < N; i++) {
+            const rx = mean[0] + x[i] * Math.cos(angle) - y[i] * Math.sin(angle);
+            const ry = mean[1] + x[i] * Math.sin(angle) + y[i] * Math.cos(angle);
+            pointsX.push(rx);
+            pointsY.push(ry);
+        }
+
+        return { x: pointsX, y: pointsY };
     };
+
 
     const currentEMState = emHistory[currentIteration];
 
@@ -125,9 +136,10 @@ function GMMComponent() {
 
         currentEMState.covariances.forEach((cov, i) => {
             const ellipse = getEllipse(currentEMState.means[i], cov);
+            const path = ellipse.x.map((vx, i) => `${vx},${ellipse.y[i]}`).join(' L ');
             ellipseShapes.push({
                 type: 'path',
-                path: `M ${ellipse.x.map((v, j) => `${v},${ellipse.y[j]}`).join(' L ')} Z`,
+                path: `M ${path} Z`,
                 line: { color: 'red', width: 1 },
             });
         });
@@ -157,9 +169,7 @@ function GMMComponent() {
                             <Typography>Number of Components: {nComponents}</Typography>
                             <Slider value={nComponents} onChange={(e, v) => setNComponents(v)} min={2} max={5} step={1} />
                         </Box>
-                        <Box sx={{ mt: 2 }}>
-                            <TextField label="Random Seed" type="number" value={randomSeed} onChange={(e) => setRandomSeed(parseInt(e.target.value))} fullWidth />
-                        </Box>
+
                         <Box sx={{ mt: 2, display: 'flex', gap: 1 }}>
                             <Button variant="contained" onClick={handleGenerateData}>Generate Data</Button>
                             <Button variant="contained" onClick={handleRunEM} color="secondary">Run EM</Button>

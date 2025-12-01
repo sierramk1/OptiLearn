@@ -1,9 +1,10 @@
 import { create, all } from 'mathjs';
 
-const config = {
-  // You can configure mathjs here if needed
-};
+const math = create(all);
 
-const math = create(all, config);
+// Ensure cholesky is enabled (it is under math.lusolve / math.cov dependencies)
+if (!math.cholesky) {
+  console.error("⚠️ math.cholesky not available — mathjs version may be incomplete");
+}
 
 export default math;
