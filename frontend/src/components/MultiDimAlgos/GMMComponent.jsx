@@ -5,6 +5,7 @@ import { generateGMMData } from '../../js/data_generators.js';
 import { runEM } from '../../js/gmm_mle.js';
 import math from '../../js/math_config.js';
 import { eigenDecomposition2x2 } from '../../js/math_linear_algebra.js';
+import GraphWithControls from '../common/GraphWithControls';
 
 function GMMComponent() {
     // UI Controls State
@@ -26,6 +27,7 @@ function GMMComponent() {
     const [currentIteration, setCurrentIteration] = useState(0);
     const [isPlaying, setIsPlaying] = useState(false);
     const intervalRef = useRef(null);
+    const [showGraph, setShowGraph] = useState(true);
 
     const handleGenerateData = () => {
         try {
@@ -62,12 +64,34 @@ function GMMComponent() {
         }
     };
 
+    const handlePlayPause = () => {
+        setIsPlaying(prev => !prev);
+    };
+
+    const handlePrevStep = () => {
+        setCurrentIteration(prev => Math.max(0, prev - 1));
+    };
+
+    const handleNextStep = () => {
+        setCurrentIteration(prev => Math.min(emHistory.length - 1, prev + 1));
+    };
+
+    const handleReset = () => {
+        setCurrentIteration(0);
+        setIsPlaying(false);
+    };
+
+    const handleToggleGraph = () => {
+        setShowGraph(prev => !prev);
+    };
+
     useEffect(() => {
         if (isPlaying && currentIteration < emHistory.length - 1) {
             intervalRef.current = setInterval(() => {
                 setCurrentIteration(prev => prev + 1);
             }, 500);
         } else {
+            clearInterval(intervalRef.current);
             setIsPlaying(false);
         }
         return () => clearInterval(intervalRef.current);
@@ -159,69 +183,132 @@ function GMMComponent() {
         <Box sx={{ p: 2 }}>
             <Grid container spacing={2}>
                 <Grid item xs={12} md={4}>
-                    <Paper sx={{ p: 2 }}>
-                        <Typography variant="h6">Controls</Typography>
+                    <Box sx={{ p: 2 }}>
+                        <Typography variant="h6">GMM Parameters</Typography>
                         <Box sx={{ mt: 2 }}>
                             <Typography>Number of Samples: {nSamples}</Typography>
-                            <Slider value={nSamples} onChange={(e, v) => setNSamples(v)} min={200} max={1000} step={10} />
+                            <Slider value={nSamples} onChange={(e, v) => setNSamples(v)} min={200} max={1000} step={10} sx={{ color: '#72A8C8' }} />
                         </Box>
                         <Box sx={{ mt: 2 }}>
                             <Typography>Number of Components: {nComponents}</Typography>
-                            <Slider value={nComponents} onChange={(e, v) => setNComponents(v)} min={2} max={5} step={1} />
+                            <Slider value={nComponents} onChange={(e, v) => setNComponents(v)} min={2} max={5} step={1} sx={{ color: '#72A8C8' }} />
+                        </Box>
+                        <Box sx={{ mt: 2 }}>
+                            <Typography>Max Iterations:</Typography>
+                            <TextField
+                                fullWidth
+                                type="number"
+                                value={maxIterations}
+                                onChange={(e) => setMaxIterations(Number(e.target.value))}
+                                inputProps={{ min: 1, step: 1 }}
+                                variant="outlined"
+                                size="small"
+                            />
+                        </Box>
+                        <Box sx={{ mt: 2 }}>
+                            <Typography>Tolerance:</Typography>
+                            <TextField
+                                fullWidth
+                                type="number"
+                                value={tolerance}
+                                onChange={(e) => setTolerance(Number(e.target.value))}
+                                inputProps={{ min: 1e-6, step: 1e-5 }}
+                                variant="outlined"
+                                size="small"
+                            />
                         </Box>
 
                         <Box sx={{ mt: 2, display: 'flex', gap: 1 }}>
-                            <Button variant="contained" onClick={handleGenerateData}>Generate Data</Button>
-                            <Button variant="contained" onClick={handleRunEM} color="secondary">Run EM</Button>
+                            <Button variant="contained" onClick={handleGenerateData} sx={{ backgroundColor: '#72A8C8', '&:hover': { backgroundColor: '#5a8fa8' } }}>Generate Data</Button>
+                            <Button variant="contained" onClick={handleRunEM} sx={{ backgroundColor: '#72A8C8', '&:hover': { backgroundColor: '#5a8fa8' } }}>Run EM</Button>
                         </Box>
-                    </Paper>
-                    {emHistory.length > 0 && (
-                        <Paper sx={{ p: 2, mt: 2 }}>
-                            <Typography variant="h6">Animation</Typography>
-                            <Typography>Iteration: {currentIteration} / {emHistory.length - 1}</Typography>
-                            <Slider value={currentIteration} onChange={(e, v) => setCurrentIteration(v)} min={0} max={emHistory.length - 1} step={1} />
-                            <Button onClick={() => setIsPlaying(!isPlaying)}>{isPlaying ? 'Pause' : 'Play'}</Button>
-                        </Paper>
-                    )}
+                    </Box>
                 </Grid>
                 <Grid item xs={12} md={8}>
-                    <Plot
-                        data={clusterPlotData}
+                    <GraphWithControls
+                        plotData={clusterPlotData}
                         layout={{
-                            title: 'GMM Clusters',
+                            title: `GMM Clusters (Iteration: ${currentIteration})`,
                             xaxis: { title: 'x1' },
                             yaxis: { title: 'x2' },
                             shapes: ellipseShapes,
-                            showlegend: false
+                            showlegend: false,
+                            autosize: true,
+                            margin: { l: 50, r: 50, b: 50, t: 50, pad: 4 }
                         }}
-                        style={{ width: '100%', height: '400px' }}
-                    />
-                    <Plot
-                        data={logLikelihoodData}
-                        layout={{
-                            title: 'Log-Likelihood vs. Iteration',
-                            xaxis: { title: 'Iteration' },
-                            yaxis: { title: 'Log-Likelihood' },
-                            shapes: emHistory.length > 0 ? [
-                                {
-                                    type: 'line',
-                                    x0: currentIteration, x1: currentIteration,
-                                    y0: Math.min(...emHistory.map(h => h.logLikelihood)), y1: Math.max(...emHistory.map(h => h.logLikelihood)),
-                                    line: { color: 'red', width: 2, dash: 'dot' }
-                                }
-                            ] : []
-                        }}
-                        style={{ width: '100%', height: '300px' }}
+                        config={{ responsive: true }}
+                        isPlaying={isPlaying}
+                        onPlayPause={handlePlayPause}
+                        onPrevStep={handlePrevStep}
+                        onNextStep={handleNextStep}
+                        onReset={handleReset}
+                        animationSteps={emHistory}
+                        currentStepIndex={currentIteration}
+                        error={error}
+                        showGraph={showGraph}
+                        onToggleGraph={handleToggleGraph}
+                        pseudocodeContent={
+                            <Box>
+                                <Typography variant="h6">Expectation-Maximization (EM) Algorithm for GMM Examples</Typography>
+                                <Typography component="pre" sx={{ bgcolor: '#f4f4f4', p: 2, borderRadius: 1, overflowX: 'auto' }}>
+                                    {`1. Initialization:
+   - Randomly initialize means (μ_k), covariances (Σ_k), and mixing coefficients (π_k) for each of K components.
+
+2. Expectation (E-step):
+   - Calculate the responsibility r_nk that component k takes for data point x_n:
+     r_nk = π_k * N(x_n | μ_k, Σ_k) / Σ_j (π_j * N(x_n | μ_j, Σ_j))
+     where N is the multivariate Gaussian distribution.
+
+3. Maximization (M-step):
+   - Update the parameters based on the responsibilities:
+     - New means: μ_k_new = Σ_n (r_nk * x_n) / N_k
+     - New covariances: Σ_k_new = Σ_n (r_nk * (x_n - μ_k_new)(x_n - μ_k_new)^T) / N_k
+     - New mixing coefficients: π_k_new = N_k / N
+     where N_k = Σ_n r_nk (effective number of points assigned to component k) and N is total data points.
+
+4. Convergence Check:
+   - Calculate the log-likelihood of the data.
+   - If the change in log-likelihood between iterations is below a tolerance, or max iterations reached, stop. Otherwise, repeat from E-step.`}
+                                </Typography>
+                            </Box>
+                        }
                     />
                 </Grid>
             </Grid>
             
             {emHistory.length > 0 && (
                 <Box sx={{mt: 2}}>
-                    <Typography>Final log-likelihood: {emHistory[emHistory.length-1].logLikelihood.toFixed(4)}</Typography>
-                    <Typography>Number of EM iterations: {emHistory.length - 1}</Typography>
-                    <Typography>Converged? {converged.toString()}</Typography>
+                    <Typography><Box component="span" fontWeight="bold">Final log-likelihood:</Box> {emHistory[emHistory.length-1].logLikelihood.toFixed(4).toLocaleString()}</Typography>
+                    <Typography><Box component="span" fontWeight="bold">Number of EM iterations:</Box> {emHistory.length - 1}</Typography>
+                    <Typography><Box component="span" fontWeight="bold">Converged:</Box> {converged.toString().charAt(0).toUpperCase() + converged.toString().slice(1)}</Typography>
                 </Box>
+            )}
+
+            {/* Log-Likelihood Plot - Kept separate for now */}
+            {emHistory.length > 0 && (
+                <Grid container spacing={2} sx={{mt: 2}}>
+                    <Grid item xs={12}>
+                        <Paper sx={{ p: 2 }}>
+                            <Plot
+                                data={logLikelihoodData}
+                                layout={{
+                                    title: 'Log-Likelihood vs. Iteration',
+                                    xaxis: { title: 'Iteration' },
+                                    yaxis: { title: 'Log-Likelihood' },
+                                    shapes: emHistory.length > 0 ? [
+                                        {
+                                            type: 'line',
+                                            x0: currentIteration, x1: currentIteration,
+                                            y0: Math.min(...emHistory.map(h => h.logLikelihood)), y1: Math.max(...emHistory.map(h => h.logLikelihood)),
+                                            line: { color: 'red', width: 2, dash: 'dot' }
+                                        }
+                                    ] : []
+                                }}
+                                style={{ width: '100%', height: '300px' }}
+                            />
+                        </Paper>
+                    </Grid>
+                </Grid>
             )}
 
             <Grid container spacing={2} sx={{mt: 2}}>
