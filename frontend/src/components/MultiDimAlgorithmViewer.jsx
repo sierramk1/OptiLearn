@@ -25,7 +25,7 @@ function MultiDimAlgorithmViewer() {
             Function
           </ToggleButton>
           <ToggleButton value="examples" aria-label="examples mode">
-            Example
+            Examples
           </ToggleButton>
         </ToggleButtonGroup>
       </div>
