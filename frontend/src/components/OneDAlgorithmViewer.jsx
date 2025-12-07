@@ -34,7 +34,7 @@ function OneDAlgorithmDisplay() {
         const parsedData = csv.split('\n').map(row => {
           const [x, y] = row.split(',').map(Number);
           return { x, y };
-        });
+        }).filter(p => !isNaN(p.x) && !isNaN(p.y));
         setData(parsedData);
       };
       reader.readAsText(file);
