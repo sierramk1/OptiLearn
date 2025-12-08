@@ -1,12 +1,12 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Slider, Button, Box, Typography } from '@mui/material';
-import Plot from 'react-plotly.js';
-import * as math from 'mathjs';
 import { generateLinearRegressionData } from '../../js/data_generators.js';
 import { leastSquaresObjective, leastSquaresGradient, leastSquaresHessian } from '../../js/objective_functions.js';
 import { gradientDescent } from '../../js/gradient_descent.js';
 import { newtonsMethod } from '../../js/newtons_method.js';
 import Description from './Description.jsx';
+import LinearRegressionGraphWithControls from '../common/LinearRegressionGraphWithControls.jsx';
+import * as math from 'mathjs';
 
 function LinearRegressionExample() {
   const [n, setN] = useState(100);
@@ -15,11 +15,15 @@ function LinearRegressionExample() {
   const [maxIterations, setMaxIterations] = useState(100);
   const [data, setData] = useState(null);
   const [results, setResults] = useState({ gradientDescent: null, newtonsMethod: null });
+  const [animationFrame, setAnimationFrame] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const animationIntervalRef = useRef(null);
 
   const handleGenerateData = () => {
     const generatedData = generateLinearRegressionData(n, p, noise);
     setData(generatedData);
     setResults({ gradientDescent: null, newtonsMethod: null }); // Clear previous results
+    stopAnimation();
   };
 
   const runAllOptimizations = useCallback(() => {
@@ -50,7 +54,68 @@ function LinearRegressionExample() {
         newtonsMethod: { ...nmResult, pathValues: nmPathValues }
       }));
     }
+    stopAnimation();
   }, [data, p, maxIterations]);
+
+  const startAnimation = () => {
+    stopAnimation(); // Stop any existing animation
+    setAnimationFrame(0);
+    setIsAnimating(true);
+  };
+
+  const stopAnimation = () => {
+    if (animationIntervalRef.current) {
+      clearInterval(animationIntervalRef.current);
+    }
+    setIsAnimating(false);
+  };
+
+  useEffect(() => {
+    if (isAnimating) {
+      animationIntervalRef.current = setInterval(() => {
+        setAnimationFrame(prevFrame => {
+          const gdMaxFrames = results.gradientDescent ? results.gradientDescent.path.length - 1 : 0;
+          const nmMaxFrames = results.newtonsMethod ? results.newtonsMethod.path.length - 1 : 0;
+          const maxFrames = Math.max(gdMaxFrames, nmMaxFrames);
+
+          if (prevFrame >= maxFrames) {
+            clearInterval(animationIntervalRef.current);
+            setIsAnimating(false);
+            return maxFrames;
+          }
+          return prevFrame + 1;
+        });
+      }, 700);
+    } else {
+      clearInterval(animationIntervalRef.current);
+    }
+    return () => clearInterval(animationIntervalRef.current);
+  }, [isAnimating, results.gradientDescent, results.newtonsMethod, animationFrame]);
+
+
+  const getPredictedLine = (beta) => {
+    if (!data || !beta) return null;
+    const x_vals = data.X.map(row => row[0]);
+    const x_range = [Math.min(...x_vals), Math.max(...x_vals)];
+    // Simplified for 2D plotting: y = b0*x + b1
+    const y_predicted = x_range.map(x => beta[0] * x + (p > 1 ? beta[1] : 0));
+    return { x: x_range, y: y_predicted };
+  };
+
+  const trueLine = data ? getPredictedLine(data.trueBeta) : null;
+  const gdEstimatedLine = results.gradientDescent ? getPredictedLine(results.gradientDescent.xmin) : null;
+  const nmEstimatedLine = results.newtonsMethod ? getPredictedLine(results.newtonsMethod.xmin) : null;
+
+  const gdAnimationLine = results.gradientDescent ? getPredictedLine(results.gradientDescent.path[Math.min(animationFrame, results.gradientDescent.path.length - 1)]) : null;
+  const nmAnimationLine = results.newtonsMethod ? getPredictedLine(results.newtonsMethod.path[Math.min(animationFrame, results.newtonsMethod.path.length - 1)]) : null;
+
+  const plotData = data ? [
+    { x: data.X.map(row => row[0]), y: data.y, mode: 'markers', type: 'scatter', name: 'Data' },
+    trueLine && { ...trueLine, mode: 'lines', name: 'True Line', line: { color: 'green', width: 2 } },
+    ...(gdAnimationLine ? [{ ...gdAnimationLine, mode: 'lines', name: 'Gradient Descent Path', line: { color: 'orange', width: 3 } }] : []),
+    ...(nmAnimationLine ? [{ ...nmAnimationLine, mode: 'lines', name: 'Newton\'s Method Path', line: { color: 'red', width: 3 } }] : [])
+  ].filter(Boolean) : [];
+
 
   const buttonSx = {
     backgroundColor: '#72A8C8',
@@ -63,6 +128,11 @@ function LinearRegressionExample() {
     color: '#72A8C8',
   };
 
+  const maxAnimationFrames = Math.max(
+    results.gradientDescent ? results.gradientDescent.path.length - 1 : 0,
+    results.newtonsMethod ? results.newtonsMethod.path.length - 1 : 0
+  );
+
   return (
     <div>
       <Box sx={{ display: 'flex', gap: '20px' }}>
@@ -71,40 +141,49 @@ function LinearRegressionExample() {
           <Typography variant="h4" sx={{ color: '#333', fontWeight: 'bold', marginBottom: '20px' }}>
             Linear Regression
           </Typography>
-          <Typography gutterBottom>Sample Size (n)</Typography>
-          <Slider sx={sliderSx} value={n} onChange={(e, val) => setN(val)} min={10} max={1000} step={10} valueLabelDisplay="auto" />
-          <Typography gutterBottom>Number of Predictors (p)</Typography>
-          <Slider sx={sliderSx} value={p} onChange={(e, val) => setP(val)} min={1} max={10} step={1} valueLabelDisplay="auto" />
-          <Typography gutterBottom>Noise Level</Typography>
-          <Slider sx={sliderSx} value={noise} onChange={(e, val) => setNoise(val)} min={0} max={5} step={0.1} valueLabelDisplay="auto" />
-          <Typography gutterBottom>Max Iterations</Typography>
-          <Slider sx={sliderSx} value={maxIterations} onChange={(e, val) => setMaxIterations(val)} min={10} max={5000} step={10} valueLabelDisplay="auto" />
-          <Button variant="contained" onClick={handleGenerateData} sx={{ ...buttonSx, marginTop: '20px' }}>
-            Generate Data
-          </Button>
-          {data && (
-            <Box sx={{ marginTop: '20px' }}>
-              <Button variant="contained" onClick={runAllOptimizations} sx={buttonSx}>
-                Run Optimization
-              </Button>
-            </Box>
-          )}
+          <>
+            <Typography gutterBottom>Sample Size (n)</Typography>
+            <Slider sx={sliderSx} value={n} onChange={(e, val) => setN(val)} min={10} max={1000} step={10} valueLabelDisplay="auto" />
+            <Typography gutterBottom>Number of Predictors (p)</Typography>
+            <Slider sx={sliderSx} value={p} onChange={(e, val) => setP(val)} min={1} max={10} step={1} valueLabelDisplay="auto" />
+            <Typography gutterBottom>Noise Level</Typography>
+            <Slider sx={sliderSx} value={noise} onChange={(e, val) => setNoise(val)} min={0} max={5} step={0.1} valueLabelDisplay="auto" />
+            <Typography gutterBottom>Max Iterations</Typography>
+            <Slider sx={sliderSx} value={maxIterations} onChange={(e, val) => setMaxIterations(val)} min={10} max={5000} step={10} valueLabelDisplay="auto" />
+            <Button variant="contained" onClick={handleGenerateData} sx={{ ...buttonSx, marginTop: '20px' }}>
+              Generate Data
+            </Button>
+            {data && (
+              <Box sx={{ marginTop: '20px' }}>
+                <Button variant="contained" onClick={runAllOptimizations} sx={buttonSx}>
+                  Run Optimization
+                </Button>
+              </Box>
+            )}
+            {data && (results.gradientDescent || results.newtonsMethod) && (
+              <Typography variant="body1" sx={{ marginTop: '20px' }}>
+                Iteration: {animationFrame} / {maxAnimationFrames}
+              </Typography>
+            )}
+          </>
         </Box>
 
         {/* Data Plot and Results on the right */}
         <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
           {data && (
-            <Box sx={{ padding: '20px', height: '350px', marginBottom: '20px' }}>
+            <Box sx={{ padding: '20px', height: '450px', marginBottom: '20px' }}>
               <Typography variant="h6">Data (y vs. First Predictor)</Typography>
-              <Plot
-                data={[{
-                  x: data.X.map(row => row[0]),
-                  y: data.y,
-                  mode: 'markers', type: 'scatter', name: 'Data'
-                }]}
+              <LinearRegressionGraphWithControls
+                plotData={plotData}
                 layout={{ title: 'Generated Data', xaxis: { title: 'X1' }, yaxis: { title: 'y' }, autosize: true }}
-                useResizeHandler={true}
-                style={{ width: '100%', height: '100%' }}
+                animationSteps={Array(maxAnimationFrames + 1).fill(0)} // Dummy array for slider max
+                currentStepIndex={animationFrame}
+                isPlaying={isAnimating}
+                onPlayPause={() => setIsAnimating(!isAnimating)}
+                onPrevStep={() => setAnimationFrame(Math.max(0, animationFrame - 1))}
+                onNextStep={() => setAnimationFrame(Math.min(maxAnimationFrames, animationFrame + 1))}
+                onReset={() => setAnimationFrame(0)}
+                onSliderChange={(val) => setAnimationFrame(val)}
               />
               <Typography>True Beta: [{data.trueBeta.map(b => b.toFixed(3)).join(', ')}]</Typography>
             </Box>
@@ -117,15 +196,14 @@ function LinearRegressionExample() {
               {results.gradientDescent ? (
                 <>
                   <Box sx={{ height: '300px' }}>
-                    <Plot
-                      data={[{
+                    <LinearRegressionGraphWithControls
+                      plotData={[{
                         x: Array.from({ length: results.gradientDescent.pathValues.length }, (_, i) => i),
                         y: results.gradientDescent.pathValues,
                         type: 'scatter', mode: 'lines+markers', name: 'Objective Value'
                       }]}
                       layout={{ title: 'Convergence Plot', xaxis: { title: 'Iteration' }, yaxis: { title: 'Objective Value' }, autosize: true }}
-                      useResizeHandler={true}
-                      style={{ width: '100%', height: '100%' }}
+                      animationSteps={[]} // No animation for this plot
                     />
                   </Box>
                   <Box sx={{ wordWrap: 'break-word' }}>
@@ -143,15 +221,14 @@ function LinearRegressionExample() {
               {p > 10 ? <Typography>Not available for p > 10.</Typography> : (results.newtonsMethod ? (
                 <>
                   <Box sx={{ height: '300px' }}>
-                    <Plot
-                      data={[{
+                    <LinearRegressionGraphWithControls
+                      plotData={[{
                         x: Array.from({ length: results.newtonsMethod.pathValues.length }, (_, i) => i),
                         y: results.newtonsMethod.pathValues,
                         type: 'scatter', mode: 'lines+markers', name: 'Objective Value'
                       }]}
                       layout={{ title: 'Convergence Plot', xaxis: { title: 'Iteration' }, yaxis: { title: 'Objective Value' }, autosize: true }}
-                      useResizeHandler={true}
-                      style={{ width: '100%', height: '100%' }}
+                      animationSteps={[]} // No animation for this plot
                     />
                   </Box>
                   <Box sx={{ wordWrap: 'break-word' }}>
