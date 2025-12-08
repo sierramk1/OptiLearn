@@ -283,6 +283,18 @@ https://dev.ua/en/news/ya-povnistiu-i-katastrofichno-pidviv-vas-1753427615`
           </CardContent>
         </Card>
 
+        <Card sx={{ mb: 4 }}>
+          <CardContent>
+            <Typography variant="h5" component="h2" gutterBottom>Key Takeaways!</Typography>
+            <Typography variant="body1" component="ul" sx={{ pl: 2 }}>
+              <li>Best for small batches of code</li>
+              <li>Isolate to small directories</li>
+              <li>Evaluate everything Gemini edits</li>
+              <li>Collaboration > delegation!</li>
+            </Typography>
+          </CardContent>
+        </Card>
+
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography variant="h6">Appendix: Full Project Logs</Typography>
