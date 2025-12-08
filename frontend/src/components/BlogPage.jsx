@@ -176,6 +176,12 @@ https://dev.ua/en/news/ya-povnistiu-i-katastrofichno-pidviv-vas-1753427615`
               Beyond writing code, Gemini was a great creative partner. When I was unsure how to visualize a complex algorithm, I could ask for suggestions. It would propose different types of plots, suggest libraries like Plotly, and help with the overall design of the user interface.
             </Typography>
             <Box sx={{ my: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px', backgroundColor: '#f9f9f9' }}>
+              <img src="/blog_images/Gemini_CLI_newtonRaphson.png" alt="AI providing design suggestions for Newton Raphson" style={{ width: '100%', borderRadius: '4px' }} />
+              <Typography variant="caption" sx={{ display: 'block', textAlign: 'center', mt: 1, color: 'grey.600' }}>
+                Gemini helping to visualize Newton's Method.
+              </Typography>
+            </Box>
+            <Box sx={{ my: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px', backgroundColor: '#f9f9f9' }}>
               <img src="/blog_images/Gemini_week3_suggestions.png" alt="AI providing design suggestions" style={{ width: '100%', borderRadius: '4px' }} />
               <Typography variant="caption" sx={{ display: 'block', textAlign: 'center', mt: 1, color: 'grey.600' }}>
                 Gemini offering suggestions for visualization and implementation.
@@ -256,6 +262,17 @@ https://dev.ua/en/news/ya-povnistiu-i-katastrofichno-pidviv-vas-1753427615`
               <img src="/blog_images/Gemini_week3_problemwithfile.png" alt="AI creating a python script to edit a file" style={{ width: '100%', borderRadius: '4px' }} />
               <Typography variant="caption" sx={{ display: 'block', textAlign: 'center', mt: 1, color: 'grey.600' }}>
                 The AI creating a Python script to edit a file it was struggling with.
+              </Typography>
+            </Box>
+
+            <Typography variant="h6" component="h3" gutterBottom>Limitation: Mistakes in File Paths</Typography>
+            <Typography variant="body1" paragraph>
+              Gemini sometimes makes mistakes with file paths, especially when dealing with special characters or complex directory structures. This can lead to errors or unexpected behavior.
+            </Typography>
+            <Box sx={{ my: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px', backgroundColor: '#f9f9f9' }}>
+              <img src="/blog_images/Gemini_week3_typo.png" alt="AI making a typo in a file path" style={{ width: '100%', borderRadius: '4px' }} />
+              <Typography variant="caption" sx={{ display: 'block', textAlign: 'center', mt: 1, color: 'grey.600' }}>
+                An example of Gemini making a typo in a file path, leading to an error.
               </Typography>
             </Box>
 
