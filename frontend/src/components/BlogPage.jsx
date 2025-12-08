@@ -116,10 +116,15 @@ https://dev.ua/en/news/ya-povnistiu-i-katastrofichno-pidviv-vas-1753427615`
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
           <Box sx={{ flex: 1, mr: 4 }}>
             <Typography variant="h3" component="h1" gutterBottom sx={{ fontWeight: 'bold', color: '#333' }}>
-              A Developer's Guide to Building with a Gen-AI Assistant
+              Building with a Gen-AI Assistant
             </Typography>
             <Typography variant="h6" sx={{ color: 'grey.700' }}>
-              An honest look at the process of building OptiLearn with the help of Google's Gemini.
+              An honest look at the process of building OptiLearn with the help of Google's Gemini CLI.
+            </Typography>
+            <Typography variant="body1" sx={{ mt: 2 }}>
+              <a href="https://github.com/sierramk1/OptiLearn" target="_blank" rel="noopener noreferrer">
+                https://github.com/sierramk1/OptiLearn
+              </a>
             </Typography>
           </Box>
           <Box sx={{ maxWidth: '350px', backgroundColor: 'white', p: '10px', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
