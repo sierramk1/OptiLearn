@@ -23,9 +23,7 @@ export const newtonRaphson = (func, initialGuess, tol = 1e-5, maxIter = 100) => 
         }
 
         if (math.abs(df_x0) < 1e-15) {
-            // Avoid division by zero
-            steps.push({ x0, x1: x0 });
-            return steps;
+            throw new Error('Derivative is close to zero. Newton-Raphson method cannot continue.');
         }
 
         x1 = x0 - f_x0 / df_x0;
