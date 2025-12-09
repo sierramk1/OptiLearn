@@ -123,7 +123,7 @@ https://dev.ua/en/news/ya-povnistiu-i-katastrofichno-pidviv-vas-1753427615`
             </Typography>
             <Typography variant="body1" sx={{ mt: 2 }}>
               <a href="https://github.com/sierramk1/OptiLearn" target="_blank" rel="noopener noreferrer">
-                https://github.com/sierramk1/OptiLearn
+                Check out the project on GitHub
               </a>
             </Typography>
           </Box>

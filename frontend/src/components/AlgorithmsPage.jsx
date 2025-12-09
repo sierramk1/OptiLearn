@@ -102,7 +102,7 @@ function AlgorithmsPage() {
             </Button>
             <Button
               component={Link}
-              to="/blog"
+              to="/gen-ai-guide"
               sx={{
                 color: '#666',
                 fontSize: '1.2em',
@@ -117,7 +117,7 @@ function AlgorithmsPage() {
                 }
               }}
             >
-              Blog
+              Gen-AI Guide
             </Button>
           </Box>
         </Toolbar>

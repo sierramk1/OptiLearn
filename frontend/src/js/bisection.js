@@ -5,6 +5,19 @@ import { createInterpolatedFunction } from './utils.js'; // Import from the new 
 export const bisection = (func, a, b, tol = 1e-5, maxIter = 100) => {
     const steps = [];
     let c;
+
+    const fa_initial = typeof func === 'string' ? math.evaluate(func, {x: a}) : func(a);
+    if (math.abs(fa_initial) < tol) {
+        steps.push({ a, b, c: a });
+        return steps;
+    }
+
+    const fb_initial = typeof func === 'string' ? math.evaluate(func, {x: b}) : func(b);
+    if (math.abs(fb_initial) < tol) {
+        steps.push({ a, b, c: b });
+        return steps;
+    }
+
     for (let i = 0; i < maxIter; i++) {
         c = (a + b) / 2;
         steps.push({ a, b, c });

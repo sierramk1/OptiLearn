@@ -6,7 +6,18 @@ export const secant = (func, x0, x1, tol = 1e-5, maxIter = 100) => {
     const steps = [];
     const isStringFunc = typeof func === 'string';
     let f_x0 = isStringFunc ? math.evaluate(func, {x: x0}) : func(x0);
+
+    if (math.abs(f_x0) < tol) {
+        steps.push({ x0, x1, x2: x0 });
+        return steps;
+    }
+
     let f_x1 = isStringFunc ? math.evaluate(func, {x: x1}) : func(x1);
+    if (math.abs(f_x1) < tol) {
+        steps.push({ x0, x1, x2: x1 });
+        return steps;
+    }
+
     let x2;
 
     for (let i = 0; i < maxIter; i++) {
