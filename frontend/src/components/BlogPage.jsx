@@ -128,7 +128,7 @@ https://dev.ua/en/news/ya-povnistiu-i-katastrofichno-pidviv-vas-1753427615`
             </Typography>
           </Box>
           <Box sx={{ maxWidth: '350px', backgroundColor: 'white', p: '10px', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
-            <img src="/blog_images/gemini_opening.png" alt="Gemini CLI opening screen" style={{ width: '100%', height: 'auto', borderRadius: '4px' }} />
+            <img src="/blog_images/Gemini_CLI_opening.png" alt="Gemini CLI opening screen" style={{ width: '100%', height: 'auto', borderRadius: '4px' }} />
           </Box>
         </Box>
 
@@ -141,13 +141,10 @@ https://dev.ua/en/news/ya-povnistiu-i-katastrofichno-pidviv-vas-1753427615`
 
         <Card sx={{ mb: 4 }}>
           <CardContent>
-            <Typography variant="h5" component="h2" gutterBottom>Chapter 1: The Art of the Prompt</Typography>
+            <Typography variant="h5" component="h2" gutterBottom>Chapter 1: Initializing Your Project with GenAI</Typography>
+            <Typography variant="h6" component="h3" gutterBottom>The First Prompt: A Simple Fix</Typography>
             <Typography variant="body1" paragraph>
-              Working with an AI assistant is a dialogue. You start with a simple request, and then you refine. In my first week, I tested Gemini's capabilities with small, well-defined tasks. It excelled at these, which helped build a foundation of trust and understanding.
-            </Typography>
-            <Typography variant="h6" component="h3" gutterBottom>Key Prompt: A Simple Fix</Typography>
-            <Typography variant="body1" paragraph>
-              Here is an example of a perfect first prompt. It's small, specific, and has a clear definition of success.
+              Here is an example of a perfect first prompt. It's small, specific, and has a clear definition of success. It gives you an understanding of how the AI thinks and works.
             </Typography>
             <Box sx={{ my: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px', backgroundColor: '#f9f9f9' }}>
               <img src="/blog_images/Gemini_CLI_bug_fix.png" alt="Simple bug fix prompt and response" style={{ width: '100%', borderRadius: '4px' }} />
@@ -155,17 +152,39 @@ https://dev.ua/en/news/ya-povnistiu-i-katastrofichno-pidviv-vas-1753427615`
                 My first interaction: asking the AI to find and fix a simple bug.
               </Typography>
             </Box>
+            <Typography variant="body1" paragraph>
+              Starting a new project can be daunting, but GenAI can quickly scaffold the basic structure. Here's how I used Gemini to set up the initial files for my JavaScript website.
+            </Typography>
+            <Box sx={{ my: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px', backgroundColor: '#f9f9f9' }}>
+              <img src="/blog_images/project_setup.png" alt="Gemini creating project structure" style={{ width: '100%', borderRadius: '4px' }} />
+              <Typography variant="caption" sx={{ display: 'block', textAlign: 'center', mt: 1, color: 'grey.600' }}>
+                Gemini's response to setting up the initial project structure.
+              </Typography>
+            </Box>
+            <Typography variant="body1" paragraph>
+              Documenting your project is crucial, and GenAI can even help you set up your blog or tutorial pages.
+            </Typography>
+            <Box sx={{ my: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px', backgroundColor: '#f9f9f9' }}>
+              <img src="/blog_images/blog_page_add.png" alt="Gemini helping to create a blog page" style={{ width: '100%', borderRadius: '4px' }} />
+              <Typography variant="caption" sx={{ display: 'block', textAlign: 'center', mt: 1, color: 'grey.600' }}>
+                Prompt: "Can you help me setup a blog page on my application to include my weekly logs located in the documentation directly?"
+                Gemini assisting in the creation of the blog page itself.
+              </Typography>
+            </Box>
+            <Typography variant="body1" paragraph>
+              Working with an AI assistant is a dialogue. You start with a simple request, and then you refine. In my first week, I tested Gemini's capabilities with small, well-defined tasks. It excelled at these, which helped build a foundation of trust and understanding.
+            </Typography>
           </CardContent>
         </Card>
 
         <Card sx={{ mb: 4 }}>
           <CardContent>
-            <Typography variant="h5" component="h2" gutterBottom>Chapter 2: Gemini's Strengths: Small Tasks and Big Ideas</Typography>
+            <Typography variant="h5" component="h2" gutterBottom>Chapter 2: Leveraging GenAI for Development Tasks</Typography>
             <Typography variant="body1" paragraph>
               Throughout this project, Gemini proved to be an invaluable partner for a wide range of tasks. Its strengths were most apparent in two key areas: executing small, well-defined coding tasks and providing high-level suggestions for design and architecture.
             </Typography>
             
-            <Typography variant="h6" component="h3" gutterBottom>Strength: Testing and Verification</Typography>
+            <Typography variant="h6" component="h3" gutterBottom>Testing and Verification</Typography>
             <Typography variant="body1" paragraph>
               Once I had implemented a new algorithm, Gemini was excellent at helping me test it. It could quickly generate testing scripts, suggest testing frameworks, and even run the tests for me. This was a huge time-saver and helped me verify my implementations quickly.
             </Typography>
@@ -176,20 +195,55 @@ https://dev.ua/en/news/ya-povnistiu-i-katastrofichno-pidviv-vas-1753427615`
               </Typography>
             </Box>
 
-            <Typography variant="h6" component="h3" gutterBottom>Strength: Design and Visualization Ideas</Typography>
+            <Typography variant="h6" component="h3" gutterBottom>Algorithm Implementation and Edge Cases</Typography>
+            <Typography variant="body1" paragraph>
+              GenAI can be incredibly helpful in implementing complex algorithms and ensuring they handle edge cases robustly.
+            </Typography>
+            <Box sx={{ my: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px', backgroundColor: '#f9f9f9' }}>
+              <img src="/blog_images/bisection_implementation.png" alt="Bisection method implementation" style={{ width: '100%', borderRadius: '4px' }} />
+              <Typography variant="caption" sx={{ display: 'block', textAlign: 'center', mt: 1, color: 'grey.600' }}>
+                Implementing an edge case check for the Bisection method.
+              </Typography>
+            </Box>
+            <Box sx={{ my: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px', backgroundColor: '#f9f9f9' }}>
+              <img src="/blog_images/bisection_implementation_part2.png" alt="Bisection method implementation part 2" style={{ width: '100%', borderRadius: '4px' }} />
+              <Typography variant="caption" sx={{ display: 'block', textAlign: 'center', mt: 1, color: 'grey.600' }}>
+                Continued implementation of the Bisection method edge case.
+              </Typography>
+            </Box>
+            <Box sx={{ my: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px', backgroundColor: '#f9f9f9' }}>
+              <img src="/blog_images/newton_raphson_edge_case.png" alt="Newton Raphson edge case check" style={{ width: '100%', borderRadius: '4px' }} />
+              <Typography variant="caption" sx={{ display: 'block', textAlign: 'center', mt: 1, color: 'grey.600' }}>
+                Implementing an edge case check for Newton-Raphson when the derivative is near zero.
+              </Typography>
+            </Box>
+            <Box sx={{ my: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px', backgroundColor: '#f9f9f9' }}>
+              <img src="/blog_images/golden_search_edge_case.png" alt="Golden Search edge case check" style={{ width: '100%', borderRadius: '4px' }} />
+              <Typography variant="caption" sx={{ display: 'block', textAlign: 'center', mt: 1, color: 'grey.600' }}>
+                Implementing an edge case check for Golden Search initial f-values.
+              </Typography>
+            </Box>
+
+            <Typography variant="h6" component="h3" gutterBottom>Design and Visualization Ideas</Typography>
             <Typography variant="body1" paragraph>
               Beyond writing code, Gemini was a great creative partner. When I was unsure how to visualize a complex algorithm, I could ask for suggestions. It would propose different types of plots, suggest libraries like Plotly, and help with the overall design of the user interface.
             </Typography>
             <Box sx={{ my: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px', backgroundColor: '#f9f9f9' }}>
-              <img src="/blog_images/Gemini_CLI_newtonRaphson.png" alt="AI providing design suggestions for Newton Raphson" style={{ width: '100%', borderRadius: '4px' }} />
-              <Typography variant="caption" sx={{ display: 'block', textAlign: 'center', mt: 1, color: 'grey.600' }}>
-                Gemini helping to visualize Newton's Method.
-              </Typography>
-            </Box>
-            <Box sx={{ my: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px', backgroundColor: '#f9f9f9' }}>
               <img src="/blog_images/Gemini_week3_suggestions.png" alt="AI providing design suggestions" style={{ width: '100%', borderRadius: '4px' }} />
               <Typography variant="caption" sx={{ display: 'block', textAlign: 'center', mt: 1, color: 'grey.600' }}>
                 Gemini offering suggestions for visualization and implementation.
+              </Typography>
+            </Box>
+            <Box sx={{ my: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px', backgroundColor: '#f9f9f9' }}>
+              <img src="/blog_images/dynamic_plotting.png" alt="AI aiding dynamic plotting" style={{ width: '100%', borderRadius: '4px' }} />
+              <Typography variant="caption" sx={{ display: 'block', textAlign: 'center', mt: 1, color: 'grey.600' }}>
+                Gemini offering suggestions for visualization and implementation.
+              </Typography>
+            </Box>
+            <Box sx={{ my: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px', backgroundColor: '#f9f9f9' }}>
+              <img src="/blog_images/Gemini_CLI_newtonRaphson.png" alt="AI providing design suggestions for Newton Raphson" style={{ width: '100%', borderRadius: '4px' }} />
+              <Typography variant="caption" sx={{ display: 'block', textAlign: 'center', mt: 1, color: 'grey.600' }}>
+                Gemini helping to visualize Newton's Method.
               </Typography>
             </Box>
             
@@ -208,25 +262,36 @@ https://dev.ua/en/news/ya-povnistiu-i-katastrofichno-pidviv-vas-1753427615`
 
         <Card sx={{ mb: 4 }}>
           <CardContent>
-            <Typography variant="h5" component="h2" gutterBottom>Chapter 3: Handling Real-World Data & Architectural Pivots</Typography>
+            <Typography variant="h5" component="h2" gutterBottom>Chapter 3: GenAI in Architectural Decisions and Data Handling</Typography>
             <Typography variant="body1" paragraph>
               As the project grew, I wanted to move beyond hardcoded functions and allow users to upload their own data. This led to one of the most significant architectural shifts in the project.
             </Typography>
             
             <Typography variant="h6" component="h3" gutterBottom>From Backend to Frontend</Typography>
             <Typography variant="body1" paragraph>
-              Initially, the plan was to have a Python Flask backend to handle data processing. Gemini was incredibly helpful in setting up this initial backend structure. The image below shows one of our early sessions where we were getting the Flask server running.
+              Initially, the plan was to have a Python Flask backend to handle data processing. Gemini was incredibly helpful in setting up this initial backend structure.
             </Typography>
             <Box sx={{ my: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px', backgroundColor: '#f9f9f9' }}>
-              <img src="/blog_images/Gemini_CLI_backend_setup.png" alt="Setting up the Flask backend" style={{ width: '100%', borderRadius: '4px' }} />
+              <img src="/blog_images/backend_setup.png" alt="Setting up the Flask backend" style={{ width: '100%', borderRadius: '4px' }} />
               <Typography variant="caption" sx={{ display: 'block', textAlign: 'center', mt: 1, color: 'grey.600' }}>
-                An early session setting up the Python backend with Flask.
+                Gemini assisting in setting up the backend structure.
               </Typography>
             </Box>
-
+            <Box sx={{ my: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px', backgroundColor: '#f9f9f9' }}>
+              <img src="/blog_images/flask_setup.png" alt="Asking Gemini about Flask" style={{ width: '100%', borderRadius: '4px' }} />
+              <Typography variant="caption" sx={{ display: 'block', textAlign: 'center', mt: 1, color: 'grey.600' }}>
+                Asking Gemini about Flask implementation.
+              </Typography>
+            </Box>
             <Typography variant="body1" paragraph>
               However, we later decided to pivot to a frontend-only application to simplify deployment. This meant all the data processing, including CSV parsing and interpolation, had to happen in the browser. Gemini was instrumental in this transition, helping to move the algorithm files from the backend to the frontend, remove the unnecessary Flask features, convert logic from Python to JavaScript, and restructure the project for a client-side only architecture.
             </Typography>
+            <Box sx={{ my: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px', backgroundColor: '#f9f9f9' }}>
+              <img src="/blog_images/backend_to_frontend.png" alt="Backend to frontend transition" style={{ width: '100%', borderRadius: '4px' }} />
+              <Typography variant="caption" sx={{ display: 'block', textAlign: 'center', mt: 1, color: 'grey.600' }}>
+                Gemini estimating the effort to transition from backend to frontend.
+              </Typography>
+            </Box>
 
             <Typography variant="h6" component="h3" gutterBottom>Key Prompt: A Complex Feature Request</Typography>
             <Typography variant="body1" paragraph>
@@ -243,7 +308,7 @@ https://dev.ua/en/news/ya-povnistiu-i-katastrofichno-pidviv-vas-1753427615`
 
         <Card sx={{ mb: 4 }}>
           <CardContent>
-            <Typography variant="h5" component="h2" gutterBottom>Chapter 4: When Things Go Wrong</Typography>
+            <Typography variant="h5" component="h2" gutterBottom>Chapter 4: Navigating Challenges with GenAI</Typography>
             <Typography variant="body1" paragraph>
               Collaboration with the AI was not always smooth. It's important to be aware of its limitations. I encountered several challenges, including struggles with large files, mistakes in file paths, and issues with cross-session memory.
             </Typography>
@@ -290,10 +355,25 @@ https://dev.ua/en/news/ya-povnistiu-i-katastrofichno-pidviv-vas-1753427615`
 
         <Card sx={{ mb: 4 }}>
           <CardContent>
-            <Typography variant="h5" component="h2" gutterBottom>Key Takeaways!</Typography>
+            <Typography variant="h5" component="h2" gutterBottom>Chapter 5: Beyond Core Development: Other GenAI Capabilities</Typography>
+            <Typography variant="body1" paragraph>
+              GenAI tools aren't just for coding; they can also assist with broader tasks like web surfing to gather information.
+            </Typography>
+            <Box sx={{ my: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px', backgroundColor: '#f9f9f9' }}>
+              <img src="/blog_images/Gemini_week3_websurfing.png" alt="Gemini web surfing" style={{ width: '100%', borderRadius: '4px' }} />
+              <Typography variant="caption" sx={{ display: 'block', textAlign: 'center', mt: 1, color: 'grey.600' }}>
+                Gemini demonstrating its web surfing capabilities.
+              </Typography>
+            </Box>
+          </CardContent>
+        </Card>
+
+        <Card sx={{ mb: 4 }}>
+          <CardContent>
+            <Typography variant="h5" component="h2" gutterBottom>Key Takeaways of Gemini CLI</Typography>
             <Typography variant="body1" component="ul" sx={{ pl: 2 }}>
-              <li>Best for small batches of code</li>
-              <li>Isolate to small directories</li>
+              <li>Best for small batches of code: implementing algorithms, testing functions, debugging snippets</li>
+              <li>Isolate to small directories to protect files from corruption</li>
               <li>Evaluate everything Gemini edits</li>
               <li>Collaboration > delegation!</li>
             </Typography>

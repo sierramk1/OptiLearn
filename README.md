@@ -11,6 +11,8 @@ To follow the project for reproduction, you can download the frontend directory 
 
 You can also visit the application at: https://opti-learn.vercel.app/ 
 
+You can find the GenAI Tutorial here: [GenAI Tutorial](https://opti-learn.vercel.app/gen-ai-guide)
+
 ```text
 OptiLearn/
 ├── experiments/ # Experimental code, prototypes, and learning materials
