@@ -50,6 +50,31 @@ function BisectionComponent({ optimizationType, data }) {
     const tol = parseFloat(tolerance);
     const maxIter = parseInt(maxIterations);
 
+    if (tol <= 0 || maxIter <= 0) {
+        setError('Tolerance and Max Iterations must be greater than 0 for this algorithm.');
+        return;
+    }
+
+    // Validation
+    if (isNaN(a) || isNaN(b)) {
+      setError('Please enter valid numbers for interval a and b.');
+      return;
+    }
+
+    if (a >= b) {
+      setError('Interval a must be less than interval b.');
+      return;
+    }
+
+    if (optimizationType === 'data' && data && data.length > 0) {
+        const minDataX = Math.min(...data.map(p => p.x));
+        const maxDataX = Math.max(...data.map(p => p.x));
+        if (a < minDataX || a > maxDataX || b < minDataX || b > maxDataX) {
+            setError(`Initial interval points a and b must be within the range of the provided data [${minDataX.toFixed(2)}, ${maxDataX.toFixed(2)}].`);
+            return;
+        }
+    }
+
     try {
       // Call the client-side solveBisection function
       const resultSteps = solveBisection(
@@ -143,8 +168,12 @@ function BisectionComponent({ optimizationType, data }) {
         return;
     }
 
-    const initialPlotRangeStart = Math.min(a, b) - Math.abs(b - a) * 0.5;
-    const initialPlotRangeEnd = Math.max(a, b) + Math.abs(b - a) * 0.5;
+    const initialPlotRangeStart = optimizationType === 'data' && data && data.length > 0
+        ? Math.min(...data.map(p => p.x))
+        : Math.min(a, b) - Math.abs(b - a) * 0.5;
+    const initialPlotRangeEnd = optimizationType === 'data' && data && data.length > 0
+        ? Math.max(...data.map(p => p.x))
+        : Math.max(a, b) + Math.abs(b - a) * 0.5;
 
     const numPoints = 200;
     const x_temp_plot = Array.from(
@@ -154,6 +183,10 @@ function BisectionComponent({ optimizationType, data }) {
         (i * (initialPlotRangeEnd - initialPlotRangeStart)) / (numPoints - 1)
     );
     const y_temp_plot = x_temp_plot.map((x) => myFunction(x));
+
+    // Filter out NaN values for plotting the main function line
+    const validPoints = x_temp_plot.map((x, i) => ({ x, y: y_temp_plot[i] }))
+                                   .filter(p => isFinite(p.y));
 
     const finiteYValues = y_temp_plot.filter((y) => isFinite(y));
     if (finiteYValues.length === 0) {
@@ -168,8 +201,8 @@ function BisectionComponent({ optimizationType, data }) {
 
     const newPlotData = [
         {
-          x: x_temp_plot,
-          y: y_temp_plot,
+          x: validPoints.map(p => p.x),
+          y: validPoints.map(p => p.y),
           type: "scatter",
           mode: "lines",
           name: optimizationType === 'function' ? `f(x) = ${funcString}` : 'Interpolated Function',

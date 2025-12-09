@@ -270,6 +270,23 @@ function NewtonsMethodComponent() {
       };
 
 
+      // --- Validation Logic Integrated ---
+      // Test initial guess with func, grad, and hessian to catch immediate errors
+      try {
+        const initialFuncVal = func(initialGuess);
+        const initialGradVal = grad(initialGuess);
+        const initialHessianVal = hessian(initialGuess);
+
+        if (!isFinite(initialFuncVal) || initialGradVal.some(isNaN) || initialGradVal.some(v => !isFinite(v)) || initialHessianVal.some(row => row.some(isNaN)) || initialHessianVal.some(row => row.some(v => !isFinite(v)))) {
+          alert("Initial function, gradient, or Hessian evaluation resulted in non-finite values (NaN/Infinity). Please check your function, gradient, Hessian, and initial guess.");
+          return;
+        }
+      } catch (validationError) {
+        alert(`Error during initial function/gradient/Hessian validation: ${validationError.message}. Please check your function, gradient, and Hessian strings.`);
+        return;
+      }
+      // --- End Validation Logic ---
+
       try {
         const result = newtonsMethod(func, grad, hessian, initialGuess, tolerance, maxIterations);
 

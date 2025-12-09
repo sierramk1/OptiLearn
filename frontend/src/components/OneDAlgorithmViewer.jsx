@@ -31,10 +31,24 @@ function OneDAlgorithmDisplay() {
       const reader = new FileReader();
       reader.onload = (e) => {
         const csv = e.target.result;
-        const parsedData = csv.split('\n').map(row => {
-          const [x, y] = row.split(',').map(Number);
-          return { x, y };
-        }).filter(p => !isNaN(p.x) && !isNaN(p.y));
+        const parsedData = csv.split('\n')
+          .filter(row => {
+            const trimmedRow = row.trim();
+            // Only process rows that are not empty and do not start with 'x,y' (header)
+            // and appear to start with a number (first character is a digit or a minus sign)
+            return trimmedRow !== '' && 
+                   !trimmedRow.startsWith('x,y') &&
+                   (trimmedRow.charAt(0) === '-' || (trimmedRow.charAt(0) >= '0' && trimmedRow.charAt(0) <= '9'));
+          })
+          .map(row => {
+            const parts = row.split(',').map(Number);
+            // Ensure we have at least two numeric parts
+            if (parts.length >= 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+              return { x: parts[0], y: parts[1] };
+            }
+            return null; // Invalid row
+          })
+          .filter(p => p !== null); // Remove invalid rows
         setData(parsedData);
       };
       reader.readAsText(file);

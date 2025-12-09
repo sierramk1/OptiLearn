@@ -53,6 +53,21 @@ function NewtonRaphsonComponent({ optimizationType, data }) {
         return;
     }
 
+    // Validation
+    if (isNaN(x0)) {
+      setError('Please enter a valid number for initial guess x0.');
+      return;
+    }
+
+    if (optimizationType === 'data' && data && data.length > 0) {
+        const minDataX = Math.min(...data.map(p => p.x));
+        const maxDataX = Math.max(...data.map(p => p.x));
+        if (x0 < minDataX || x0 > maxDataX) {
+            setError(`Initial guess x0 must be within the range of the provided data [${minDataX.toFixed(2)}, ${maxDataX.toFixed(2)}].`);
+            return;
+        }
+    }
+
     try {
       // Call the client-side solveNewtonRaphson function
       const resultSteps = solveNewtonRaphson(
@@ -141,8 +156,12 @@ function NewtonRaphsonComponent({ optimizationType, data }) {
         return;
     }
 
-    const initialPlotRangeStart = x0 - 5;
-    const initialPlotRangeEnd = x0 + 5;
+    const initialPlotRangeStart = optimizationType === 'data' && data && data.length > 0
+        ? Math.min(...data.map(p => p.x))
+        : x0 - 5;
+    const initialPlotRangeEnd = optimizationType === 'data' && data && data.length > 0
+        ? Math.max(...data.map(p => p.x))
+        : x0 + 5;
 
     const numPoints = 200;
     const x_temp_plot = Array.from(
@@ -152,6 +171,10 @@ function NewtonRaphsonComponent({ optimizationType, data }) {
         (i * (initialPlotRangeEnd - initialPlotRangeStart)) / (numPoints - 1)
     );
     const y_temp_plot = x_temp_plot.map((x) => myFunction(x));
+
+    // Filter out NaN values for plotting the main function line
+    const validPoints = x_temp_plot.map((x, i) => ({ x, y: y_temp_plot[i] }))
+                                   .filter(p => isFinite(p.y));
 
     const finiteYValues = y_temp_plot.filter((y) => isFinite(y));
     if (finiteYValues.length === 0) {
@@ -166,8 +189,8 @@ function NewtonRaphsonComponent({ optimizationType, data }) {
 
     const newPlotData = [
         {
-          x: x_temp_plot,
-          y: y_temp_plot,
+          x: validPoints.map(p => p.x),
+          y: validPoints.map(p => p.y),
           type: "scatter",
           mode: "lines",
           name: optimizationType === 'function' ? `f(x) = ${funcString}` : 'Interpolated Function',

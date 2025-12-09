@@ -18,6 +18,11 @@ export const bisection = (func, a, b, tol = 1e-5, maxIter = 100) => {
         return steps;
     }
 
+    // Check if f(a) and f(b) have opposite signs
+    if (fa_initial * fb_initial >= 0) {
+        throw new Error("Function values at 'a' and 'b' must have opposite signs (f(a) * f(b) < 0).");
+    }
+
     for (let i = 0; i < maxIter; i++) {
         c = (a + b) / 2;
         steps.push({ a, b, c });

@@ -18,10 +18,22 @@ export function gradientDescent(f, g, x0, step_size = 0.0001, update_step_size =
     let current_x = x0;
     let f0 = f(current_x, ...args);
     let g0 = g(current_x, ...args);
+
+    // Initial check for convergence based on gradient norm
+    if (math.norm(g0) < tol) {
+        return { xmin: current_x, fmin: f0, step_size: step_size, convergence: true, iter: 0, path: [x0] };
+    }
+
     let current_step_size = step_size;
     const path = [x0]; // Initialize path
 
     for (let iter = 1; iter <= max_iter; iter++) {
+        // Check for convergence based on gradient norm at each step
+        if (math.norm(g0) < tol) {
+            path.push(current_x); // Add final point to path
+            return { xmin: current_x, fmin: f0, step_size: current_step_size, convergence: true, iter: iter, path: path };
+        }
+
         const next_x = math.subtract(current_x, math.multiply(current_step_size, g0));
         const f1 = f(next_x, ...args);
 

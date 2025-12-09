@@ -99,6 +99,15 @@ function GoldenSearchComponent({ optimizationType, data }) {
       return;
     }
 
+    if (optimizationType === 'data' && data && data.length > 0) {
+        const minDataX = Math.min(...data.map(p => p.x));
+        const maxDataX = Math.max(...data.map(p => p.x));
+        if (a < minDataX || a > maxDataX || b < minDataX || b > maxDataX || c < minDataX || c > maxDataX) {
+            setError(`Initial points a, b, and c must be within the range of the provided data [${minDataX.toFixed(2)}, ${maxDataX.toFixed(2)}].`);
+            return;
+        }
+    }
+
     const fa = myFunction(a);
     const fb = myFunction(b);
     const fc = myFunction(c);
@@ -183,8 +192,12 @@ function GoldenSearchComponent({ optimizationType, data }) {
         return;
     }
 
-    const initialPlotRangeStart = Math.min(a, c) - Math.abs(c - a) * 0.5;
-    const initialPlotRangeEnd = Math.max(a, c) + Math.abs(c - a) * 0.5;
+    const initialPlotRangeStart = optimizationType === 'data' && data && data.length > 0
+        ? Math.min(...data.map(p => p.x))
+        : Math.min(a, c) - Math.abs(c - a) * 0.5;
+    const initialPlotRangeEnd = optimizationType === 'data' && data && data.length > 0
+        ? Math.max(...data.map(p => p.x))
+        : Math.max(a, c) + Math.abs(c - a) * 0.5;
 
     const numPoints = 200;
     const x_temp_plot = Array.from(
@@ -194,6 +207,10 @@ function GoldenSearchComponent({ optimizationType, data }) {
         (i * (initialPlotRangeEnd - initialPlotRangeStart)) / (numPoints - 1)
     );
     const y_temp_plot = x_temp_plot.map((x) => myFunction(x));
+
+    // Filter out NaN values for plotting the main function line
+    const validPoints = x_temp_plot.map((x, i) => ({ x, y: y_temp_plot[i] }))
+                                   .filter(p => isFinite(p.y));
 
     const finiteYValues = y_temp_plot.filter((y) => isFinite(y));
     if (finiteYValues.length === 0) {
@@ -208,8 +225,8 @@ function GoldenSearchComponent({ optimizationType, data }) {
 
     const newPlotData = [
         {
-          x: x_temp_plot,
-          y: y_temp_plot,
+          x: validPoints.map(p => p.x),
+          y: validPoints.map(p => p.y),
           type: "scatter",
           mode: "lines",
           name: optimizationType === 'function' ? `f(x) = ${funcString}` : 'Interpolated Function',
