@@ -341,7 +341,7 @@ function GoldenSearchComponent({ optimizationType, data }) {
             color="text.secondary"
             sx={{ fontStyle: 'italic', marginBottom: 2 }}
           >
-            Note: The choice of starting points or interval can affect which root or minimum is found, especially for functions with multiple solutions.
+            Note: The choice of starting points or interval can affect which root or minimum is found, especially for functions with multiple solutions. Additionally, the objective function must be unimodal within the search interval for the Golden Search algorithm to guarantee convergence to the global minimum.
           </Typography>
 
           <Grid container spacing={2} sx={{ width: "100%" }}>

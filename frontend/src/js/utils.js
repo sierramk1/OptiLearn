@@ -5,18 +5,10 @@ const piecewiseLinearInterpolation = (xs, ys) => {
     let i = xs.findIndex(xi => xi >= x);
 
     if (i === -1) { // x is greater than all xs
-        if (xs.length < 2) return ys[ys.length - 1];
-        const x1 = xs[xs.length - 2], y1 = ys[ys.length - 2];
-        const x2 = xs[xs.length - 1], y2 = ys[ys.length - 1];
-        if (x2 === x1) return y2;
-        return y1 + (y2 - y1) * (x - x1) / (x2 - x1); // Extrapolate
+        return NaN;
     }
     if (i === 0) { // x is smaller than all xs
-        if (xs.length < 2) return ys[0];
-        const x1 = xs[0], y1 = ys[0];
-        const x2 = xs[1], y2 = ys[1];
-        if (x2 === x1) return y2;
-        return y1 + (y2 - y1) * (x - x1) / (x2 - x1); // Extrapolate
+        return NaN;
     }
 
     const x1 = xs[i - 1], y1 = ys[i - 1];
@@ -37,7 +29,14 @@ export const createInterpolatedFunction = (data, type = 'cubic') => {
 
     if (type === 'cubic') {
         const spline = new Spline(xs, ys);
-        return (x) => spline.at(x);
+        const minX = xs[0];
+        const maxX = xs[xs.length - 1];
+        return (x) => {
+            if (x < minX || x > maxX) {
+                return NaN; // Prevent extrapolation
+            }
+            return spline.at(x);
+        };
     } else if (type === 'piecewise') {
         return piecewiseLinearInterpolation(xs, ys);
     } else {
