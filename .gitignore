@@ -16,4 +16,5 @@ node_modules/
 
 # R
 .Rhistory
-.RData.vscode/
+.RData
+.vscode/
