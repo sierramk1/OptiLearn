@@ -33,7 +33,7 @@ const BlogPage = () => {
 -- Install and learn Gemini CLI: explore its capabilities for visualization, UI generation, etc	
 
 The following was accomplished:
-The system architecture is outlined in the README file, and the corresponding folders were added to the repository. Gemini CLI was easy to install and setup with my personal google account, but not possible with umich accounts. It works great for git commands and tells you how to run scripts it writes. When you ask it to complete something it will suggest a solution and then ask if it can be implemented or if you would like to modify it, which is helpful. Sometimes it accidentally tries to edit the wrong file or uses the wrong file path, so you still have to be careful and read what it is attempting to do. I messed it up once because I had "&" in a file name and it struggled to move the file because of the special character. Overall, I asked it several basic prompts to test its capabilities and it excelled very well at these. Pictures of the Gemini output can be found in the ai_interactions folder. 
+The system architecture is outlined in the README file, and the corresponding folders were added to the repository. Gemini CLI was easy to install and set up with my personal Google account, but not possible with umich accounts. It works great for git commands and tells you how to run scripts it writes. When you ask it to complete something it will suggest a solution and then ask if it can be implemented or if you would like to modify it, which is helpful. Sometimes it accidentally tries to edit the wrong file or uses the wrong file path, so you still have to be careful and read what it is attempting to do. I messed it up once because I had "&" in a file name and it struggled to move the file because of the special character. Overall, I asked it several basic prompts to test its capabilities and it excelled very well at these. Pictures of the Gemini output can be found in the ai_interactions folder. 
 
 These are the prompts I asked it:
 Write a Python function that computes the factorial of a number using recursion.
@@ -71,7 +71,7 @@ Something else I learned this week is that Gemini has no memory of past conversa
 
 Additionally, Gemini is pretty good at surfing the web if you have current, relevant questions. I asked it for the news from the previous day, and it easily pulled up the information. This can be seen in the screenshot 'Gemini_week3_websurfing.png'. However, if you leave a session open for a long time, as I did, it can only surf the web from the day before the session started. The longer the session is open, the more out-of-date its information can be.
 
-Later in the week, I spent some more time with Gemini developing the application's interactivity. I ran into a problem when I asked Gemini to update a file with the code it suggested. It seems the code to update the file was too large for Gemini to process in a single command, so it defaulted to creating a Python script to write to the original file. This method proved to be more stable for creating the JavaScript files, but it is another few steps that Gemini has to take, and they must be approved. I think this supports my general feeling that Gemini is very helpful, but more so for small changes, bugs, and maybe Git commands, and not so much for writing a lot of code. Once I got bisection working as I wanted, I implemented Golden Search, which was much easier now that Gemini knew what worked and what didn’t. I will also credit Gemini for remembering how I wanted to visualize the golden ratio in the graph from the Jupyter notebook we worked on, but this was because I never terminated the session. However, I ran into the same problem a lot this week where Gemini wanted to update an algorithmic visualization we had already worked on, despite numerous explanations that it was already done.`
+Later in the week, I spent some more time with Gemini developing the application's interactivity. I ran into a problem when I asked Gemini to update a file with the code it suggested. It seems the code to update the file was too large for Gemini to process in a single command, so it defaulted to creating a Python script to write to the original file. This method proved to be more stable for creating the JavaScript files, but this adds a few steps that Gemini has to take, and they must be approved. I think this supports my general feeling that Gemini is very helpful, but more so for small changes, bugs, and maybe Git commands, and not so much for writing a lot of code. Once I got bisection working as I wanted, I implemented Golden Search, which was much easier now that Gemini knew what worked and what didn’t. I will also credit Gemini for remembering how I wanted to visualize the golden ratio in the graph from the Jupyter notebook we worked on, but this was because I never terminated the session. However, I ran into the same problem a lot this week where Gemini wanted to update an algorithmic visualization we had already worked on, despite numerous explanations that it was already done.`
     },
     week4: {
       title: "Week 4: Building the Backend and Data Input Features",
@@ -89,7 +89,7 @@ At the end of the week, Gemini and I had the backend connected to the frontend. 
       title: "Week 5: Visualizing Multi-dimensional Algorithms and Trust Issues",
       content: `This week, I chose to pivot back to the algorithms to work on visualizing the two multi-dimensional algorithms.
 	I replicated much of the structure of the one-dimensional algorithms page, with function input, initial guess, and algorithm-specific details, as well as the number of dimensions. In the gradient descent algorithm in multiple dimensions, I chose to visualize this by showing the path the algorithm takes across the function’s surface. Since the function now has more than one input variable, I used a contour plot (or 3D surface plot) to represent the function’s landscape. The algorithm’s iterations are overlaid as points or arrows to show how it moves toward the minimum. This allows users to see not only the convergence behavior but also the trajectory through the “valleys” and “ridges” of the function. I also included a pseudocode display so that users can connect the visual path with the underlying computational steps, making the algorithm’s behavior clear in higher dimensions.
-	For functions or data with more than three dimensions, I chose to show convergence plots and tables of iteration coordinates so users can track the algorithm’s progress even when it’s not possible to visualize all dimensions at once. I ran into some interesting errors with Gemini, specifically its use of the 'NOOP' (no-operation) command, which it forced me to allow it to run despite me telling it to stop. The 'NOOP' command was just a no-operation command that allowed Gemini to print something to me, but generally, in the past few weeks, Gemini could just speak to me without needing permission for a 'NOOP' command. This was completely new to me, and I attempted to stop it by using the 'save-memory' command to tell Gemini not to use it, but Gemini would not save this fact to memory, despite me feeding it the 'save-memory' command and details several times. 
+	For functions or data with more than three dimensions, I chose to show convergence plots and tables of iteration coordinates so users can track the algorithm’s progress even when it’s not possible to visualize all dimensions at once. I ran into some interesting errors with Gemini, specifically its use of the 'NOOP' (no-operation) command, which it forced me to allow it to run despite my telling it to stop. The 'NOOP' command was just a no-operation command that allowed Gemini to print something to me, but generally, in the past few weeks, Gemini could just speak to me without needing permission for a 'NOOP' command. This was completely new to me, and I attempted to stop it by using the 'save-memory' command to tell Gemini not to use it, but Gemini would not save this fact to memory, despite me feeding it the 'save-memory' command and details several times. 
 	I will say that when I transitioned my project from a backend to a frontend-only architecture this week, Gemini was very helpful. I asked it how long it expected this process to take, and it estimated 2-3 days of work, but it only took Gemini about 30 minutes to convert the necessary files, restructure the project, and update other dependent files. This impressed me and felt like a great use of Gemini to accomplish a complicated task in a short amount of time. Also, I think one of the benefits of collaborating with Gemini is that I have learned more about how to debug an application by using console logs. I would have never known how to work through many of the problems I have encountered with Gemini, but learning how Gemini handles them has been incredibly beneficial.
 	At some point, we were working through a bug in the frontend, and when I went to check the files in VSCode, they were empty. I accused Gemini of corrupting the files, but it denied touching them.  This came up multiple times this week with several different files. I am not sure if it is related to the fallback/default version of Gemini used when I hit my daily limit for the pro model, but it is quite frustrating and a major con of using Gemini.  Moreover, I did some personal research into this problem to see if it really was Gemini that seemed to empty my files without ever asking me or claiming to have touched them. I found some interesting articles about people losing all of their files thanks to Gemini CLI, which is truly awful for them, but it was nice to know I wasn’t alone in this problem. This has led me to believe that it is best to use Gemini CLI in a smaller directory you want to work on, instead of an entire project or your whole desktop. In general, I have lost trust in Gemini.
 The article and forum I found:https://news.ycombinator.com/item?id=44651485
@@ -167,7 +167,7 @@ https://dev.ua/en/news/ya-povnistiu-i-katastrofichno-pidviv-vas-1753427615`
             <Box sx={{ my: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px', backgroundColor: '#f9f9f9' }}>
               <img src="/blog_images/blog_page_add.png" alt="Gemini helping to create a blog page" style={{ width: '100%', borderRadius: '4px' }} />
               <Typography variant="caption" sx={{ display: 'block', textAlign: 'center', mt: 1, color: 'grey.600' }}>
-                Prompt: "Can you help me setup a blog page on my application to include my weekly logs located in the documentation directly?"
+                Prompt: "Can you help me set up a blog page on my application to include my weekly logs located in the documentation directly?"
                 Gemini assisting in the creation of the blog page itself.
               </Typography>
             </Box>
@@ -181,7 +181,7 @@ https://dev.ua/en/news/ya-povnistiu-i-katastrofichno-pidviv-vas-1753427615`
           <CardContent>
             <Typography variant="h5" component="h2" gutterBottom>Chapter 2: Leveraging GenAI for Development Tasks</Typography>
             <Typography variant="body1" paragraph>
-              Throughout this project, Gemini proved to be an invaluable partner for a wide range of tasks. Its strengths were most apparent in two key areas: executing small, well-defined coding tasks and providing high-level suggestions for design and architecture.
+              Throughout this project, Gemini proved to be an invaluable partner for a wide range of tasks. Its strengths were most apparent in three key areas: executing small, well-defined coding tasks, debugging, and providing high-level suggestions for design and architecture.
             </Typography>
             
             <Typography variant="h6" component="h3" gutterBottom>Testing and Verification</Typography>
@@ -197,7 +197,7 @@ https://dev.ua/en/news/ya-povnistiu-i-katastrofichno-pidviv-vas-1753427615`
 
             <Typography variant="h6" component="h3" gutterBottom>Algorithm Implementation and Edge Cases</Typography>
             <Typography variant="body1" paragraph>
-              GenAI can be incredibly helpful in implementing complex algorithms and ensuring they handle edge cases robustly.
+              GenAI can be incredibly helpful in implementing complex algorithms and ensuring they handle edge cases robustly. It helped me decide how to evaluate rare edge cases such as when the input value is the root/minimum, deal with algorithm-specific cases such as when the derivative is close to 0 in Newton-Raphson, and generally check inputs fulfill algorithm requirements.
             </Typography>
             <Box sx={{ my: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px', backgroundColor: '#f9f9f9' }}>
               <img src="/blog_images/bisection_implementation.png" alt="Bisection method implementation" style={{ width: '100%', borderRadius: '4px' }} />
@@ -264,12 +264,12 @@ https://dev.ua/en/news/ya-povnistiu-i-katastrofichno-pidviv-vas-1753427615`
           <CardContent>
             <Typography variant="h5" component="h2" gutterBottom>Chapter 3: GenAI in Architectural Decisions and Data Handling</Typography>
             <Typography variant="body1" paragraph>
-              As the project grew, I wanted to move beyond hardcoded functions and allow users to upload their own data. This led to one of the most significant architectural shifts in the project.
+              Moving beyond hardcoded functions to support user-uploaded data was a primary goal, but it led to a series of architectural challenges. The initial plan involved a Python backend, but the struggles with its implementation prompted a major shift: moving all data processing to be handled exclusively on the client-side.
             </Typography>
             
             <Typography variant="h6" component="h3" gutterBottom>From Backend to Frontend</Typography>
             <Typography variant="body1" paragraph>
-              Initially, the plan was to have a Python Flask backend to handle data processing. Gemini was incredibly helpful in setting up this initial backend structure.
+              Initially, the plan was to have a Python Flask backend to handle data processing. Gemini was incredibly helpful in setting up this initial backend structure and explaining how it worked.
             </Typography>
             <Box sx={{ my: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px', backgroundColor: '#f9f9f9' }}>
               <img src="/blog_images/backend_setup.png" alt="Setting up the Flask backend" style={{ width: '100%', borderRadius: '4px' }} />
@@ -290,6 +290,28 @@ https://dev.ua/en/news/ya-povnistiu-i-katastrofichno-pidviv-vas-1753427615`
               <img src="/blog_images/backend_to_frontend.png" alt="Backend to frontend transition" style={{ width: '100%', borderRadius: '4px' }} />
               <Typography variant="caption" sx={{ display: 'block', textAlign: 'center', mt: 1, color: 'grey.600' }}>
                 Gemini estimating the effort to transition from backend to frontend.
+              </Typography>
+            </Box>
+
+            <Typography variant="h6" component="h3" gutterBottom>Setting up client-side data processing</Typography>
+            <Typography variant="body1" paragraph>
+              This prompt kicked off the implementation of the client-side data processing feature, which became a cornerstone of the final application.
+            </Typography>
+            <Box sx={{ my: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px', backgroundColor: '#f9f9f9' }}>
+              <img src="/blog_images/Gemini_CLI_dataPage.png" alt="Complex feature request prompt and response" style={{ width: '100%', borderRadius: '4px' }} />
+              <Typography variant="caption" sx={{ display: 'block', textAlign: 'center', mt: 1, color: 'grey.600' }}>
+                Prompting the AI to implement the CSV data input and interpolation feature.
+              </Typography>
+            </Box>
+
+            <Typography variant="h6" component="h3" gutterBottom>Implementing client side interpolation</Typography>
+            <Typography variant="body1" paragraph>
+              To find roots from user-supplied data, I first needed to create a continuous function from the discrete data points. I asked Gemini to help me implement cubic spline interpolation in JavaScript.
+            </Typography>
+            <Box sx={{ my: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px', backgroundColor: '#f9f9f9' }}>
+              <img src="/blog_images/interpolation_implementation.png" alt="Implementing cubic spline interpolation" style={{ width: '100%', borderRadius: '4px' }} />
+              <Typography variant="caption" sx={{ display: 'block', textAlign: 'center', mt: 1, color: 'grey.600' }}>
+                Gemini's suggestion for implementing the interpolation logic using the `cubic-spline` library.
               </Typography>
             </Box>
 
