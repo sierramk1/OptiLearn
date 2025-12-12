@@ -13,6 +13,34 @@ You can also visit the application at: https://opti-learn.vercel.app/
 
 You can find the GenAI Tutorial here: [GenAI Tutorial](https://opti-learn.vercel.app/gen-ai-guide)
 
+## Running the Project Locally
+
+To run this project on your own machine, follow these steps:
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/sierramk1/OptiLearn.git
+   ```
+
+2. **Navigate to the frontend directory:**
+   ```bash
+   cd OptiLearn/frontend
+   ```
+
+3. **Install dependencies:**
+   This command will install all the necessary packages for the application.
+   ```bash
+   npm install
+   ```
+
+4. **Start the application:**
+   This will run the app in development mode.
+   ```bash
+   npm start
+   ```
+   Open [http://localhost:3000](http://localhost:3000) to view it in your browser. The page will reload when you make changes.
+
+
 ```text
 OptiLearn/
 ├── experiments/ # Experimental code, prototypes, and learning materials
