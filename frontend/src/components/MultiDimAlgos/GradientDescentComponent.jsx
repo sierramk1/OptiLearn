@@ -225,8 +225,10 @@ function GradientDescentComponent() {
         }
         try {
           const result = math.evaluate(gradStr, scope);
-          // math.evaluate returns a Matrix if the expression is an array, convert to Array
-          return Array.isArray(result) ? result : result.toArray();
+          if (result && typeof result.toArray === 'function') {
+            return result.toArray();
+          }
+          return result;
         } catch (err) {
           console.error('Error evaluating gradient:', err);
           throw new Error(`Error in gradient expression: ${err.message}`);
@@ -239,8 +241,8 @@ function GradientDescentComponent() {
         const initialFuncVal = func(initialGuess);
         const initialGradVal = grad(initialGuess);
 
-        if (!isFinite(initialFuncVal) || initialGradVal.some(isNaN) || initialGradVal.some(v => !isFinite(v))) {
-          alert("Initial function or gradient evaluation resulted in non-finite values (NaN/Infinity). Please check your function, gradient, and initial guess.");
+        if (!isFinite(initialFuncVal) || !Array.isArray(initialGradVal) || initialGradVal.some(v => !isFinite(v))) {
+          alert("Initial function or gradient evaluation resulted in non-finite or non-array values. Please check your function, gradient, and initial guess.");
           return;
         }
       } catch (validationError) {

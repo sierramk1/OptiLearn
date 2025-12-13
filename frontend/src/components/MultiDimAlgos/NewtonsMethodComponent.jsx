@@ -243,6 +243,9 @@ function NewtonsMethodComponent() {
         }
         try {
           const result = math.evaluate(gradStr, scope);
+          if (result && typeof result.toArray === 'function') {
+            return result.toArray();
+          }
           return result;
         } catch (err) {
           console.error('Error evaluating gradient:', err);
@@ -262,6 +265,9 @@ function NewtonsMethodComponent() {
 
         try {
           const result = math.evaluate(hessianStr, scope);
+          if (result && typeof result.toArray === 'function') {
+            return result.toArray();
+          }
           return result;
         } catch (err) {
           console.error('Error evaluating Hessian:', err);
@@ -277,8 +283,14 @@ function NewtonsMethodComponent() {
         const initialGradVal = grad(initialGuess);
         const initialHessianVal = hessian(initialGuess);
 
-        if (!isFinite(initialFuncVal) || initialGradVal.some(isNaN) || initialGradVal.some(v => !isFinite(v)) || initialHessianVal.some(row => row.some(isNaN)) || initialHessianVal.some(row => row.some(v => !isFinite(v)))) {
-          alert("Initial function, gradient, or Hessian evaluation resulted in non-finite values (NaN/Infinity). Please check your function, gradient, Hessian, and initial guess.");
+        if (
+          !isFinite(initialFuncVal) ||
+          !Array.isArray(initialGradVal) ||
+          initialGradVal.some(v => !isFinite(v)) ||
+          !Array.isArray(initialHessianVal) ||
+          initialHessianVal.some(row => !Array.isArray(row) || row.some(v => !isFinite(v)))
+        ) {
+          alert("Initial function, gradient, or Hessian evaluation resulted in non-finite or non-array values. Please check your function, gradient, Hessian, and initial guess.");
           return;
         }
       } catch (validationError) {
