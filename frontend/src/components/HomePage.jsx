@@ -25,8 +25,7 @@ function HomePage() {
         <div style={{ marginTop: '30px', display: 'flex', flexDirection: 'row', gap: '15px', justifyContent: 'center' }}> {/* Added justifyContent: 'center' */}
           <Button
             component={Link}
-            to="/algorithms"
-            state={{ showOneD: true }}
+            to="/one-dimensional"
             sx={{
               width: '250px', // Adjusted width
               height: '50px', // Adjusted height
@@ -47,8 +46,7 @@ function HomePage() {
           
           <Button
             component={Link}
-            to="/algorithms"
-            state={{ showOneD: false }}
+            to="/multi-dimensional"
             sx={{
               width: '250px', // Adjusted width
               height: '50px', // Adjusted height

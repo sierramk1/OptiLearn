@@ -1,18 +1,26 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import HomePage from './components/HomePage.jsx';
-import AlgorithmsPage from './components/AlgorithmsPage.jsx';
+import OneDAlgorithmsPage from './components/OneDAlgorithmsPage.jsx';
+import MultiDAlgorithmsPage from './components/MultiDAlgorithmsPage.jsx';
 import BlogPage from './components/BlogPage.jsx';
+import BisectionPage from './components/OneDAlgos/BisectionPage.jsx';
+import GoldenSearchPage from './components/OneDAlgos/GoldenSearchPage.jsx';
+import NewtonRaphsonPage from './components/OneDAlgos/NewtonRaphsonPage.jsx';
+import SecantPage from './components/OneDAlgos/SecantPage.jsx';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/algorithms" element={<AlgorithmsPage />} />
-        <Route path="/gen-ai-guide" element={<BlogPage />} />
-      </Routes>
-    </Router>
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/one-dimensional" element={<OneDAlgorithmsPage />} />
+      <Route path="/one-dimensional/bisection" element={<BisectionPage />} />
+      <Route path="/one-dimensional/golden-search" element={<GoldenSearchPage />} />
+      <Route path="/one-dimensional/newton-raphson" element={<NewtonRaphsonPage />} />
+      <Route path="/one-dimensional/secant" element={<SecantPage />} />
+      <Route path="/multi-dimensional" element={<MultiDAlgorithmsPage />} />
+      <Route path="/gen-ai-guide" element={<BlogPage />} />
+    </Routes>
   );
 }
 

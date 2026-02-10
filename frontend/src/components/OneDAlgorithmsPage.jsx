@@ -1,24 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
-import OneDAlgorithmViewer from './OneDAlgorithmViewer.jsx';
-import MultiDimAlgorithmViewer from './MultiDimAlgorithmViewer.jsx';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { AppBar, Toolbar, Typography, Button, Box, Card, CardContent, CardActions } from '@mui/material';
+import oneDAlgorithmsData from './OneDAlgos/oneDAlgorithmsData'; // Import the data
 
-function AlgorithmsPage() {
-  const location = useLocation();
-  const [showOneDSection, setShowOneDSection] = useState(location.state?.showOneD !== undefined ? location.state.showOneD : true);
-
-  useEffect(() => {
-    if (location.state?.showOneD !== undefined) {
-      setShowOneDSection(location.state.showOneD);
-    }
-  }, [location.state]);
-
+function OneDAlgorithmsPage() {
   return (
     <div style={{
       padding: '0px', 
       backgroundColor: '#F4F2EF', // Main content area background color
-      fontFamily: 'Roboto, Arial, sans-serif' 
+      fontFamily: 'Roboto, Arial, sans-serif',
+      minHeight: '100vh'
     }}>
       {/* --- TOP HEADER AND NAVIGATION --- */}
       <AppBar 
@@ -65,11 +56,12 @@ function AlgorithmsPage() {
           <Box sx={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
             {/* One-Dimensional / Multi-Dimensional buttons in Header */}
             <Button
-              onClick={() => setShowOneDSection(true)}
+              component={Link}
+              to="/one-dimensional"
               sx={{
-                color: showOneDSection ? '#3C667E' : '#666',
+                color: '#3C667E',
                 fontSize: '1.2em',
-                fontWeight: showOneDSection ? 'bold' : 'normal',
+                fontWeight: 'bold',
                 textDecoration: 'none',
                 textTransform: 'none',
                 minWidth: '180px',
@@ -83,11 +75,12 @@ function AlgorithmsPage() {
               One-Dimensional
             </Button>
             <Button
-              onClick={() => setShowOneDSection(false)}
+              component={Link}
+              to="/multi-dimensional"
               sx={{
-                color: !showOneDSection ? '#3C667E' : '#666',
+                color: '#666',
                 fontSize: '1.2em',
-                fontWeight: !showOneDSection ? 'bold' : 'normal',
+                fontWeight: 'normal',
                 textDecoration: 'none',
                 textTransform: 'none',
                 minWidth: '180px',
@@ -124,21 +117,46 @@ function AlgorithmsPage() {
       </AppBar>
 
       {/* --- Algorithm Content --- */}
-      <div style={{ padding: '0px', minHeight: 'calc(100vh - 77px)' }}> 
-        {showOneDSection ? (
-          <>
-            {/* Render the new OneDAlgorithmViewer component */}
-            <OneDAlgorithmViewer />
-          </>
-        ) : (
-          <>
-          <MultiDimAlgorithmViewer />
-          </>
-        )}
+      <div style={{ padding: '20px' }}>
+        <Typography variant="h4" sx={{ marginBottom: '20px' }}>One-Dimensional Algorithms</Typography>
+        <Box sx={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+          {oneDAlgorithmsData.map((algorithm) => (
+            <Link 
+              to={algorithm.route} 
+              key={algorithm.name} 
+              style={{ textDecoration: 'none', flexGrow: 1 }}
+            >
+              <Card 
+                sx={{ 
+                  minWidth: 275, 
+                  backgroundColor: '#72A8C8', 
+                  color: 'white', 
+                  borderRadius: '8px',
+                  '&:hover': { 
+                    backgroundColor: '#5a8fa8',
+                    cursor: 'pointer'
+                  }
+                }}
+              >
+                <Box sx={{ padding: '16px' }}>
+                  <Typography variant="h5" component="div">
+                    {algorithm.name}
+                  </Typography>
+                  <Typography sx={{ mb: 1.5 }} color="inherit">
+                    {algorithm.type}
+                  </Typography>
+                  <Typography variant="body2" color="inherit">
+                    {algorithm.description}
+                  </Typography>
+                </Box>
+              </Card>
+            </Link>
+          ))}
+        </Box>
       </div>
 
     </div>
   );
 }
 
-export default AlgorithmsPage;
+export default OneDAlgorithmsPage;
