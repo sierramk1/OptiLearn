@@ -117,9 +117,9 @@ function OneDAlgorithmsPage() {
       </AppBar>
 
       {/* --- Algorithm Content --- */}
-      <div style={{ padding: '20px' }}>
-        <Typography variant="h4" sx={{ marginBottom: '20px' }}>One-Dimensional Algorithms</Typography>
-        <Box sx={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+      <div style={{ height: 'calc(100vh - 77px)', display: 'flex', flexDirection: 'column' }}>
+        <Typography variant="h4" sx={{ marginBottom: '20px', color: '#666', padding: '20px 20px 0px 20px' }}>One-Dimensional Algorithms</Typography>
+        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gridTemplateRows: 'repeat(2, 1fr)', gap: '20px', padding: '0px 40px 20px 40px', flexGrow: 1 }}>
           {oneDAlgorithmsData.map((algorithm) => (
             <Link 
               to={algorithm.route} 
@@ -128,10 +128,12 @@ function OneDAlgorithmsPage() {
             >
               <Card 
                 sx={{ 
-                  minWidth: 275, 
                   backgroundColor: '#72A8C8', 
                   color: 'white', 
                   borderRadius: '8px',
+                  border: '1px solid white',
+                  height: '100%',
+                  width: '100%',
                   '&:hover': { 
                     backgroundColor: '#5a8fa8',
                     cursor: 'pointer'
@@ -139,7 +141,7 @@ function OneDAlgorithmsPage() {
                 }}
               >
                 <Box sx={{ padding: '16px' }}>
-                  <Typography variant="h5" component="div">
+                  <Typography variant="h5" component="div" sx={{ textShadow: '1px 1px 0px black' }}>
                     {algorithm.name}
                   </Typography>
                   <Typography sx={{ mb: 1.5 }} color="inherit">
